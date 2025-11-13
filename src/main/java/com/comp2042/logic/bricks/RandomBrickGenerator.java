@@ -24,6 +24,10 @@ public class RandomBrickGenerator implements BrickGenerator {
         nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
         nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
     }
+    /*
+    Makes a queue of all the tetris blocks and adds 2 random blocks onto the queue
+    to represent the current and next blocks to fall.
+     */
 
     @Override
     public Brick getBrick() {
@@ -32,9 +36,17 @@ public class RandomBrickGenerator implements BrickGenerator {
         }
         return nextBricks.poll();
     }
+    /*
+    Retrieves and removes the front brick from the queue.
+    If the queue size is less than or equal to one before removal,
+    a new random brick is generated and added to the queue to ensure the next brick is ready.
+     */
 
     @Override
     public Brick getNextBrick() {
         return nextBricks.peek();
     }
+    /*
+    Gets the info of the next brick without removing it from the queue.
+     */
 }

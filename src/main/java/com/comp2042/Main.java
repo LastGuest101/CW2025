@@ -26,6 +26,9 @@ public class Main extends Application {
         primaryStage.show();
         new GameController(c);
     }
+    /* Initialises the GameController and the GUI Controller, and sets the dimensions and the title of the window
+
+     */
 
 
     public static void main(String[] args) {

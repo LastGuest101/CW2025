@@ -82,6 +82,10 @@ public class GuiController implements Initializable {
                 }
             }
         });
+        /*
+        Used to map each keyboard button pressed to its function to the game.
+        isn't fully coded yet and is seemed to be wanting to be used to start a new game
+         */
         gameOverPanel.setVisible(false);
 
         final Reflection reflection = new Reflection();
@@ -121,6 +125,16 @@ public class GuiController implements Initializable {
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
     }
+    /*
+    Set up the visual game board (displayMatrix)
+    Creates rectangles for each visible cell and adds them to the gamePanel.
+    Set up the current brick’s visual representation (rectangles)
+    Creates rectangles for each part of the brick and adds them to brickPanel.
+    Position the brick panel correctly on top of the main board
+    Takes into account the brick’s offset and the hidden top rows.
+    Start automatic downward movement using a Timeline
+    Calls moveDown() every 400ms to simulate gravity.
+     */
 
     private Paint getFillColor(int i) {
         Paint returnPaint;
@@ -155,6 +169,9 @@ public class GuiController implements Initializable {
         }
         return returnPaint;
     }
+    /*
+    Fills in the color of the bricks
+     */
 
 
     private void refreshBrick(ViewData brick) {
@@ -168,6 +185,10 @@ public class GuiController implements Initializable {
             }
         }
     }
+    /*
+    This method updates the visual representation (brickPanel) of a brick on the screen based
+     on the current state of the brick data model (brick), but only if the game is not paused.
+     */
 
     public void refreshGameBackground(int[][] board) {
         for (int i = 2; i < board.length; i++) {
@@ -195,6 +216,14 @@ public class GuiController implements Initializable {
         }
         gamePanel.requestFocus();
     }
+    /*
+    Handles the brick moving down when a down event occurs.
+    - Checks if the game is not paused.
+    - Moves the brick down via the event listener.
+    - If a row was cleared, displays a score notification.
+    - Updates the visual representation of the brick (refreshBrick).
+    - Requests focus on the game panel to continue receiving input.
+     */
 
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
@@ -202,6 +231,9 @@ public class GuiController implements Initializable {
 
     public void bindScore(IntegerProperty integerProperty) {
     }
+    /*
+    Needs to be implemented.
+     */
 
     public void gameOver() {
         timeLine.stop();
@@ -222,4 +254,7 @@ public class GuiController implements Initializable {
     public void pauseGame(ActionEvent actionEvent) {
         gamePanel.requestFocus();
     }
+    /*
+    Needs to be implemented
+     */
 }

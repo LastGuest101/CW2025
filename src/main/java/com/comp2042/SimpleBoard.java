@@ -39,6 +39,10 @@ public class SimpleBoard implements Board {
         }
     }
 
+    /*
+    Checks if the block 1 block downwards is valid or not
+     */
+
 
     @Override
     public boolean moveBrickLeft() {
@@ -54,6 +58,10 @@ public class SimpleBoard implements Board {
         }
     }
 
+    /*
+    Checks if the block 1 block left is valid or not
+     */
+
     @Override
     public boolean moveBrickRight() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -68,6 +76,10 @@ public class SimpleBoard implements Board {
         }
     }
 
+    /*
+    Checks if the block 1 block right is valid or not
+     */
+
     @Override
     public boolean rotateLeftBrick() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -81,6 +93,10 @@ public class SimpleBoard implements Board {
         }
     }
 
+    /*
+    Checks if the block rotating block is valid or not
+     */
+
     @Override
     public boolean createNewBrick() {
         Brick currentBrick = brickGenerator.getBrick();
@@ -88,6 +104,10 @@ public class SimpleBoard implements Board {
         currentOffset = new Point(4, 10);
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
+
+    /*
+    Spawns in new brick
+     */
 
     @Override
     public int[][] getBoardMatrix() {

@@ -27,6 +27,10 @@ public class GameController implements InputEventListener {
             if (board.createNewBrick()) {
                 viewGuiController.gameOver();
             }
+            /*
+            Checks if spawning in a new block is valid or not
+            if not then the game will go to game over state.
+             */
 
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
 
@@ -34,9 +38,17 @@ public class GameController implements InputEventListener {
             if (event.getEventSource() == EventSource.USER) {
                 board.getScore().add(1);
             }
+            /*
+            If the block is still falling and the user was the one that
+            made the block go down then increase the score by 1.
+             */
         }
         return new DownData(clearRow, board.getViewData());
     }
+
+    /*
+    Returns data about the clear rows and the state of the board after the block is moved downwards
+     */
 
     @Override
     public ViewData onLeftEvent(MoveEvent event) {

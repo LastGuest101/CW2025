@@ -20,13 +20,13 @@ public class Main extends Application {
         ResourceBundle resources = null;
         FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
         Parent root = fxmlLoader.load();
-        GuiController c = fxmlLoader.getController();
+        GuiController controller = fxmlLoader.getController();
 
         primaryStage.setTitle("TetrisJFX");
         Scene scene = new Scene(root, 300, 510);
         primaryStage.setScene(scene);
         primaryStage.show();
-        new GameController(c);
+        new GameController(controller);
     }
     /* Initialises the GameController and the GUI Controller, and sets the dimensions and the title of the window
 

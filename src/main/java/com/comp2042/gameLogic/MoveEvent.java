@@ -1,4 +1,7 @@
-package com.comp2042;
+package com.comp2042.gameLogic;
+
+import com.comp2042.ui.EventSource;
+import com.comp2042.ui.EventType;
 
 public final class MoveEvent {
     private final EventType eventType;

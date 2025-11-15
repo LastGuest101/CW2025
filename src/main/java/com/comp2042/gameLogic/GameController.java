@@ -1,4 +1,12 @@
-package com.comp2042;
+package com.comp2042.gameLogic;
+
+import com.comp2042.board.Board;
+import com.comp2042.board.SimpleBoard;
+import com.comp2042.data.DownData;
+import com.comp2042.data.ViewData;
+import com.comp2042.ui.EventSource;
+import com.comp2042.ui.GuiController;
+import com.comp2042.ui.InputEventListener;
 
 public class GameController implements InputEventListener {
 

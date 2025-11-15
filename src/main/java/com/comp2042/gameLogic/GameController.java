@@ -24,38 +24,41 @@ public class GameController implements InputEventListener {
 
     @Override
     public DownData onDownEvent(MoveEvent event) {
-        boolean canMove = board.moveBrickDown();
-        ClearRow clearRow = null;
-        if (!canMove) {
-            board.mergeBrickToBackground();
-            clearRow = board.clearRows();
-            if (clearRow.getLinesRemoved() > 0) {
-                board.getScore().add(clearRow.getScoreBonus());
-            }
-            if (board.createNewBrick()) {
-                viewGuiController.gameOver();
-            }
-            /*
-            Checks if spawning in a new block is valid or not
-            if not then the game will go to game over state.
-             */
-
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
-
-        } else {
-            if (event.getEventSource() == EventSource.USER) {
-                board.getScore().add(1);
-            }
-            /*
-            If the block is still falling and the user was the one that
-            made the block go down then increase the score by 1.
-             */
+        boolean moved = board.moveBrickDown();
+        if (moved) {
+            handleSuccessfulMoveDown(event);
+            return new DownData(null, board.getViewData());
         }
+        return handleInsersect();
+    }
+    /*
+    checks if block has moved down or has intersected.
+     */
+
+    private void handleSuccessfulMoveDown(MoveEvent event) {
+        if (event.getEventSource() == EventSource.USER) {
+            board.getScore().add(1);
+        }
+    }
+    /*
+    Adds down score if user caused the down movement
+     */
+
+    private DownData handleInsersect() {
+        board.mergeBrickToBackground();
+        ClearRow clearRow = board.clearRows();
+        if (clearRow != null && clearRow.getLinesRemoved() > 0) {
+            board.getScore().add(clearRow.getScoreBonus());
+        }
+        if (board.createNewBrick()) {
+            viewGuiController.gameOver();
+        }
+        viewGuiController.refreshGameBackground(board.getBoardMatrix());
         return new DownData(clearRow, board.getViewData());
     }
-
     /*
-    Returns data about the clear rows and the state of the board after the block is moved downwards
+    Checks for any clear rows and sees if spawning a brick is valid or not to check
+    if they should end the game or not.
      */
 
     @Override

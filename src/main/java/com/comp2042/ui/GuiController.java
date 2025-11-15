@@ -24,6 +24,8 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class GuiController implements Initializable {
@@ -54,41 +56,18 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
+    private HashMap<KeyCode, Runnable> keyActions;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
+
+        initKeyActions();
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
-        gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
-                    if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
-                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
-                        keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
-                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
-                        keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
-                        keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
-                        moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
-                        keyEvent.consume();
-                    }
-                }
-                if (keyEvent.getCode() == KeyCode.N) {
-                    newGame(null);
-                }
-            }
-        });
-        /*
-        Used to map each keyboard button pressed to its function to the game.
-        isn't fully coded yet and is seemed to be wanting to be used to start a new game
-         */
+
+        gamePanel.setOnKeyPressed(event -> handleKeyPress(event));
+
         gameOverPanel.setVisible(false);
 
         final Reflection reflection = new Reflection();
@@ -96,6 +75,50 @@ public class GuiController implements Initializable {
         reflection.setTopOpacity(0.9);
         reflection.setTopOffset(-12);
     }
+
+    private void initKeyActions() {
+        keyActions = new HashMap<>();
+
+        keyActions.put(KeyCode.LEFT, () ->
+                refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER))));
+        keyActions.put(KeyCode.A, keyActions.get(KeyCode.LEFT));
+
+        keyActions.put(KeyCode.RIGHT, () ->
+                refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER))));
+        keyActions.put(KeyCode.D, keyActions.get(KeyCode.RIGHT));
+
+        keyActions.put(KeyCode.UP, () ->
+                refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER))));
+        keyActions.put(KeyCode.W, keyActions.get(KeyCode.UP));
+
+        keyActions.put(KeyCode.DOWN, () ->
+                moveDown(new MoveEvent(EventType.DOWN, EventSource.USER)));
+        keyActions.put(KeyCode.S, keyActions.get(KeyCode.DOWN));
+
+    }
+    /*
+    Maps all keypresses to its respective event
+     */
+
+    private void handleKeyPress(KeyEvent event) {
+
+        if (event.getCode() == KeyCode.N) {
+            newGame(null);
+            return;
+        }
+
+        if (isPause.get() || isGameOver.get()) {
+            return;
+        }
+
+        Runnable action = keyActions.get(event.getCode());
+
+        if (action != null) {
+            action.run();
+            event.consume();
+        }
+    }
+
 
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
@@ -120,7 +143,11 @@ public class GuiController implements Initializable {
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
+        gameSpeed();
+    }
 
+
+    public void gameSpeed(){
         timeLine = new Timeline(new KeyFrame(
                 Duration.millis(400),
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))

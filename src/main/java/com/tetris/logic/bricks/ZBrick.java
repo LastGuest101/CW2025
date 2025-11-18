@@ -1,6 +1,6 @@
 package com.tetris.logic.bricks;
 
-final class ZBrick extends GeneralBrick {
+public final class ZBrick extends GeneralBrick {
 
     public ZBrick() {
         brickMatrix.add(new int[][]{

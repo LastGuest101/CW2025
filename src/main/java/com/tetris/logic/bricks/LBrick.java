@@ -1,6 +1,6 @@
 package com.tetris.logic.bricks;
 
-final class LBrick extends GeneralBrick {
+public final class LBrick extends GeneralBrick {
 
     public LBrick() {
         brickMatrix.add(new int[][]{

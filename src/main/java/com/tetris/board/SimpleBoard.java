@@ -27,76 +27,60 @@ public class SimpleBoard implements Board {
         score = new Score();
     }
 
-    @Override
-    public boolean moveBrickDown() {
+    /*
+     * Helper: Checks if placing the given shape at (x, y) is valid.
+     */
+    private boolean isMoveValid(int[][] shape, int targetX, int targetY) {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        Point p = new Point(currentOffset);
-        p.translate(0, 1);
-        boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
-            return false;
-        } else {
-            currentOffset = p;
-            return true;
-        }
+        boolean conflict = MatrixOperations.intersect(currentMatrix, shape, targetX, targetY);
+        return !conflict;
     }
 
     /*
-    Checks if the block 1 block downwards is valid or not
+     * Helper: Attempts to move the current shape by delta X and delta Y.
      */
+    private boolean attemptMove(int dx, int dy) {
+        Point p = new Point(currentOffset);
+        p.translate(dx, dy);
 
+        if (isMoveValid(brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY())) {
+            currentOffset = p;
+            return true;
+        }
+        return false;
+    }
+
+
+
+    @Override
+    public boolean moveBrickDown() {
+        return attemptMove(0, 1);
+    }
 
     @Override
     public boolean moveBrickLeft() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        Point p = new Point(currentOffset);
-        p.translate(-1, 0);
-        boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
-            return false;
-        } else {
-            currentOffset = p;
-            return true;
-        }
+        return attemptMove(-1, 0);
     }
-
-    /*
-    Checks if the block 1 block left is valid or not
-     */
 
     @Override
     public boolean moveBrickRight() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
-        Point p = new Point(currentOffset);
-        p.translate(1, 0);
-        boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
-        if (conflict) {
-            return false;
-        } else {
-            currentOffset = p;
-            return true;
-        }
+        return attemptMove(1, 0);
     }
-
-    /*
-    Checks if the block 1 block right is valid or not
-     */
 
     @Override
     public boolean rotateLeftBrick() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
         NextShapeInfo nextShape = brickRotator.getNextShape();
-        boolean conflict = MatrixOperations.intersect(currentMatrix, nextShape.getShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
-        if (conflict) {
-            return false;
-        } else {
+
+        // We reuse the generic helper here, passing the NEW shape but the OLD position
+        if (isMoveValid(nextShape.getShape(), (int) currentOffset.getX(), (int) currentOffset.getY())) {
             brickRotator.setCurrentShape(nextShape.getPosition());
             return true;
         }
+        return false;
     }
 
     /*
-    Checks if the block rotating block is valid or not
+    Checks if the block rotating block is valid or not NEEDS BUG FIXING FROM ROTATING AT THE SIDE.
      */
 
     @Override

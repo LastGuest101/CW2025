@@ -18,7 +18,7 @@ public class SimpleBoard implements Board {
     private Point currentOffset;
     private final Score score;
     private static final int SPAWN_X = 4;
-    private static final int SPAWN_Y = 10;
+    private static final int SPAWN_Y = -1;
 
     public SimpleBoard(int width, int height, BrickGenerator RandomBrickGenerator) {
         this.width = width;

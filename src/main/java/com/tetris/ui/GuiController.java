@@ -282,7 +282,17 @@ public class GuiController implements Initializable {
     public void pauseGame(ActionEvent actionEvent) {
         gamePanel.requestFocus();
     }
+
     /*
     Needs to be implemented
+     */
+
+    public void stopTimeLine() {
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+    }
+    /*
+    Used to stop the timeline when the game is closed
      */
 }

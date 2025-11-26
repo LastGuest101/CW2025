@@ -42,14 +42,12 @@ public class Main extends Application {
         }
     }
 
-    // Refactoring: Lifecycle management (Fixing potential bugs)
     @Override
     public void stop() throws Exception {
-        super.stop();
         if (gameController != null) {
-            // Assuming you add a shutdown method to GameController to stop timers/threads
-            // gameController.stopGame();
+            gameController.stopGame();
         }
+        super.stop();
     }
 
     public static void main(String[] args) {

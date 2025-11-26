@@ -117,13 +117,11 @@ public class MatrixOperations {
         starting with the last row in newRows and moving upward.
         Empty rows remain at the top of tmp.
          */
-        int scoreBonus = 50 * clearedRows.size() * clearedRows.size();
-        return new ClearRow(clearedRows.size(), tmp, scoreBonus);
+        return new ClearRow(clearedRows.size(), tmp);
     }
     /*
     Used to find full rows and the number of full rows,
     make a board without the full rows
-    and the score earned from the number of full rows.
      */
 
     public static List<int[][]> deepCopyList(List<int[][]> list){

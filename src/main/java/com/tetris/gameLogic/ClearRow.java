@@ -12,6 +12,11 @@ public final class ClearRow {
         this.scoreBonus = scoreBonus;
     }
 
+    // For matrix operations
+    public ClearRow(int linesRemoved, int[][] newMatrix) {
+        this(linesRemoved, newMatrix, 0);
+    }
+
     public int getLinesRemoved() {
         return linesRemoved;
     }

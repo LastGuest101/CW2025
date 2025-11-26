@@ -14,18 +14,19 @@ public class GameController implements InputEventListener {
 
     private Board board = new SimpleBoard(25, 10, new RandomBrickGenerator());
 
-    private final GuiController viewGuiController;
+    private final GameView gameView;
 
     private Timeline gameLoop;
 
     private static final double GAME_SPEED_MILLIS = 400;
 
-    public GameController(GuiController c) {
-        viewGuiController = c;
+    public GameController(GameView view) {
+        this.gameView = view; // Assign to interface field
+
         board.createNewBrick();
-        viewGuiController.setEventListener(this);
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
-        viewGuiController.bindScore(board.getScore().scoreProperty());
+        gameView.setEventListener(this); // Calls are the same, but now loose coupled
+        gameView.initGameView(board.getBoardMatrix(), board.getViewData());
+        gameView.bindScore(board.getScore().scoreProperty());
 
         this.gameLoop = new Timeline(new KeyFrame(
                 Duration.millis(GAME_SPEED_MILLIS),
@@ -33,7 +34,7 @@ public class GameController implements InputEventListener {
                     // 2. Perform the logic
                     DownData data = onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
                     // 3. Push the result to the View
-                    viewGuiController.updateView(data);
+                    gameView.updateView(data);
                 }
         ));
         gameLoop.setCycleCount(Timeline.INDEFINITE);
@@ -70,9 +71,9 @@ public class GameController implements InputEventListener {
         }
         if (board.createNewBrick()) {
             gameLoop.stop();
-            viewGuiController.gameOver();
+            gameView.gameOver();
         }
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        gameView.refreshGameBackground(board.getBoardMatrix());
         return new DownData(clearRow, board.getViewData());
     }
     /*
@@ -102,12 +103,12 @@ public class GameController implements InputEventListener {
     @Override
     public void createNewGame() {
         board.newGame();
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        gameView.refreshGameBackground(board.getBoardMatrix());
         gameLoop.play();
     }
 
     public void stopGame() {
-        if (viewGuiController != null) {
+        if (gameView != null) {
             stopTimeLine();
         }
     }

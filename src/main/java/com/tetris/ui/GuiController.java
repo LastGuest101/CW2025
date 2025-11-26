@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-public class GuiController implements Initializable {
+public class GuiController implements GameView, Initializable {
 
     private static final int BRICK_SIZE = 20;
 

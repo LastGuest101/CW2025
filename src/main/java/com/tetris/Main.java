@@ -1,4 +1,4 @@
-package com.tetris;
+package com.tetris; // Refactoring: Meaningful package organization
 
 import com.tetris.gameLogic.GameController;
 import com.tetris.ui.GuiController;
@@ -8,30 +8,49 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 public class Main extends Application {
 
+    private static final String APP_TITLE = "TetrisJFX";
+    private static final String LAYOUT_RESOURCE = "/gameLayout.fxml"; // Use absolute path
+    private static final int WINDOW_WIDTH = 300;
+    private static final int WINDOW_HEIGHT = 510;
+
+    private GameController gameController;
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(LAYOUT_RESOURCE));
+            Parent root = fxmlLoader.load();
 
-        URL location = getClass().getClassLoader().getResource("gameLayout.fxml");
-        ResourceBundle resources = null;
-        FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-        Parent root = fxmlLoader.load();
-        GuiController controller = fxmlLoader.getController();
+            GuiController guiController = fxmlLoader.getController();
 
-        primaryStage.setTitle("TetrisJFX");
-        Scene scene = new Scene(root, 300, 510);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        new GameController(controller);
+            this.gameController = new GameController(guiController);
+
+            Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+            primaryStage.setTitle(APP_TITLE);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to load application layout.");
+        }
     }
-    /* Initialises the GameController and the GUI Controller, and sets the dimensions and the title of the window
 
-     */
-
+    // Refactoring: Lifecycle management (Fixing potential bugs)
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        if (gameController != null) {
+            // Assuming you add a shutdown method to GameController to stop timers/threads
+            // gameController.stopGame();
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);

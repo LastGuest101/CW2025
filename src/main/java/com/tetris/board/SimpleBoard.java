@@ -18,11 +18,11 @@ public class SimpleBoard implements Board {
     private Point currentOffset;
     private final Score score;
 
-    public SimpleBoard(int width, int height) {
+    public SimpleBoard(int width, int height, BrickGenerator RandomBrickGenerator) {
         this.width = width;
         this.height = height;
         currentGameMatrix = new int[width][height];
-        brickGenerator = new RandomBrickGenerator();
+        brickGenerator = RandomBrickGenerator;
         brickRotator = new BrickRotator();
         score = new Score();
     }

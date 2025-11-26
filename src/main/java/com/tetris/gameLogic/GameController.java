@@ -4,6 +4,7 @@ import com.tetris.board.Board;
 import com.tetris.board.SimpleBoard;
 import com.tetris.data.DownData;
 import com.tetris.data.ViewData;
+import com.tetris.logic.bricks.RandomBrickGenerator;
 import com.tetris.ui.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -11,7 +12,7 @@ import javafx.util.Duration;
 
 public class GameController implements InputEventListener {
 
-    private Board board = new SimpleBoard(25, 10);
+    private Board board = new SimpleBoard(25, 10, new RandomBrickGenerator());
 
     private final GuiController viewGuiController;
 

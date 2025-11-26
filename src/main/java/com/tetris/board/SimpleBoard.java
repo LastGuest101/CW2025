@@ -72,17 +72,34 @@ public class SimpleBoard implements Board {
     @Override
     public boolean rotateLeftBrick() {
         NextShapeInfo nextShape = brickRotator.getNextShape();
+        int[][] newShape = nextShape.getShape();
+        int currentX = (int) currentOffset.getX();
+        int currentY = (int) currentOffset.getY();
 
-        // We reuse the generic helper here, passing the NEW shape but the OLD position
-        if (isMoveValid(nextShape.getShape(), (int) currentOffset.getX(), (int) currentOffset.getY())) {
+        // For normal rotations
+        if (isMoveValid(newShape, currentX, currentY)) {
             brickRotator.setCurrentShape(nextShape.getPosition());
             return true;
         }
+
+        // For wall rotations
+        // If the rotation fails, shift the piece to the right and left and see if valid
+        int[] kicks = {1, -1, 2, -2};
+
+        for (int dx : kicks) {
+            if (isMoveValid(newShape, currentX + dx, currentY)) {
+                currentOffset.translate(dx, 0); // Apply the kick to the position
+                brickRotator.setCurrentShape(nextShape.getPosition());
+                return true;
+            }
+        }
+
+        // If all kicks fail, the rotation is not allowed
         return false;
     }
 
     /*
-    Checks if the block rotating block is valid or not NEEDS BUG FIXING FROM ROTATING AT THE SIDE.
+    Checks if the block rotating block is valid.
      */
 
     @Override

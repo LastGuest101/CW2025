@@ -47,7 +47,7 @@ public class GameController implements InputEventListener {
             handleSuccessfulMoveDown(event);
             return new DownData(null, board.getViewData());
         }
-        return handleInsersect();
+        return handleIntersect();
     }
     /*
     checks if block has moved down or has intersected.
@@ -62,7 +62,7 @@ public class GameController implements InputEventListener {
     Adds down score if user caused the down movement
      */
 
-    private DownData handleInsersect() {
+    private DownData handleIntersect() {
         board.mergeBrickToBackground();
         ClearRow clearRow = board.clearRows();
         if (clearRow != null && clearRow.getLinesRemoved() > 0) {

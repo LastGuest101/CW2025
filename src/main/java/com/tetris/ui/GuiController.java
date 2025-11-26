@@ -48,8 +48,6 @@ public class GuiController implements Initializable {
 
     private Rectangle[][] rectangles;
 
-    private Timeline timeLine;
-
     private final BooleanProperty isPause = new SimpleBooleanProperty();
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
@@ -89,8 +87,11 @@ public class GuiController implements Initializable {
                 refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER))));
         keyActions.put(KeyCode.W, keyActions.get(KeyCode.UP));
 
-        keyActions.put(KeyCode.DOWN, () ->
-                moveDown(new MoveEvent(EventType.DOWN, EventSource.USER)));
+        keyActions.put(KeyCode.DOWN, () -> {
+            // Ask the controller to move the brick
+            DownData data = eventListener.onDownEvent(new MoveEvent(EventType.DOWN, EventSource.USER));
+            updateView(data);
+        });
         keyActions.put(KeyCode.S, keyActions.get(KeyCode.DOWN));
 
     }
@@ -140,19 +141,8 @@ public class GuiController implements Initializable {
         }
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
-
-        gameSpeed();
     }
 
-
-    public void gameSpeed(){
-        timeLine = new Timeline(new KeyFrame(
-                Duration.millis(400),
-                ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
-        ));
-        timeLine.setCycleCount(Timeline.INDEFINITE);
-        timeLine.play();
-    }
     /*
     Set up the visual game board (displayMatrix)
     Creates rectangles for each visible cell and adds them to the gamePanel.
@@ -160,10 +150,7 @@ public class GuiController implements Initializable {
     Creates rectangles for each part of the brick and adds them to brickPanel.
     Position the brick panel correctly on top of the main board
     Takes into account the brick’s offset and the hidden top rows.
-    Start automatic downward movement using a Timeline
-    Calls moveDown() every 400ms to simulate gravity.
-     */
-
+*/
     private Paint getFillColor(int i) {
         Paint returnPaint;
         switch (i) {
@@ -232,26 +219,7 @@ public class GuiController implements Initializable {
         rectangle.setArcWidth(9);
     }
 
-    private void moveDown(MoveEvent event) {
-        if (isPause.getValue() == Boolean.FALSE) {
-            DownData downData = eventListener.onDownEvent(event);
-            if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
-                NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
-                groupNotification.getChildren().add(notificationPanel);
-                notificationPanel.showScore(groupNotification.getChildren());
-            }
-            refreshBrick(downData.getViewData());
-        }
-        gamePanel.requestFocus();
-    }
-    /*
-    Handles the brick moving down when a down event occurs.
-    - Checks if the game is not paused.
-    - Moves the brick down via the event listener.
-    - If a row was cleared, displays a score notification.
-    - Updates the visual representation of the brick (refreshBrick).
-    - Requests focus on the game panel to continue receiving input.
-     */
+
 
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
@@ -264,17 +232,14 @@ public class GuiController implements Initializable {
      */
 
     public void gameOver() {
-        timeLine.stop();
         gameOverPanel.setVisible(true);
         isGameOver.setValue(Boolean.TRUE);
     }
 
     public void newGame(ActionEvent actionEvent) {
-        timeLine.stop();
         gameOverPanel.setVisible(false);
         eventListener.createNewGame();
         gamePanel.requestFocus();
-        timeLine.play();
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
     }
@@ -287,12 +252,13 @@ public class GuiController implements Initializable {
     Needs to be implemented
      */
 
-    public void stopTimeLine() {
-        if (timeLine != null) {
-            timeLine.stop();
+    public void updateView(DownData downData) {
+        if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
+            NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
+            groupNotification.getChildren().add(notificationPanel);
+            notificationPanel.showScore(groupNotification.getChildren());
         }
+        refreshBrick(downData.getViewData());
     }
-    /*
-    Used to stop the timeline when the game is closed
-     */
+
 }

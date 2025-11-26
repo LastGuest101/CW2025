@@ -4,9 +4,10 @@ import com.tetris.board.Board;
 import com.tetris.board.SimpleBoard;
 import com.tetris.data.DownData;
 import com.tetris.data.ViewData;
-import com.tetris.ui.EventSource;
-import com.tetris.ui.GuiController;
-import com.tetris.ui.InputEventListener;
+import com.tetris.ui.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class GameController implements InputEventListener {
 
@@ -14,12 +15,26 @@ public class GameController implements InputEventListener {
 
     private final GuiController viewGuiController;
 
+    private Timeline gameLoop;
+
     public GameController(GuiController c) {
         viewGuiController = c;
         board.createNewBrick();
         viewGuiController.setEventListener(this);
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
+
+        this.gameLoop = new Timeline(new KeyFrame(
+                Duration.millis(400),
+                ae -> {
+                    // 2. Perform the logic
+                    DownData data = onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                    // 3. Push the result to the View
+                    viewGuiController.updateView(data);
+                }
+        ));
+        gameLoop.setCycleCount(Timeline.INDEFINITE);
+        gameLoop.play();
     }
 
     @Override
@@ -51,6 +66,7 @@ public class GameController implements InputEventListener {
             board.getScore().add(clearRow.getScoreBonus());
         }
         if (board.createNewBrick()) {
+            gameLoop.stop();
             viewGuiController.gameOver();
         }
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
@@ -84,12 +100,33 @@ public class GameController implements InputEventListener {
     public void createNewGame() {
         board.newGame();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        gameLoop.play();
     }
 
     public void stopGame() {
         if (viewGuiController != null) {
-            viewGuiController.stopTimeLine();
+            stopTimeLine();
         }
     }
+
+    /*
+    Handles the brick moving down when a down event occurs.
+    - Checks if the game is not paused.
+    - Moves the brick down via the event listener.
+    - If a row was cleared, displays a score notification.
+    - Updates the visual representation of the brick (refreshBrick).
+    - Requests focus on the game panel to continue receiving input.
+     */
+
+    public void stopTimeLine() {
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
+    }
+    /*
+    Used to stop the timeline when the game is closed
+     */
+
+
 
 }

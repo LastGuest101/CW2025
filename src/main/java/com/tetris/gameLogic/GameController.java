@@ -18,6 +18,8 @@ public class GameController implements InputEventListener {
 
     private Timeline gameLoop;
 
+    private static final double GAME_SPEED_MILLIS = 400;
+
     public GameController(GuiController c) {
         viewGuiController = c;
         board.createNewBrick();
@@ -26,7 +28,7 @@ public class GameController implements InputEventListener {
         viewGuiController.bindScore(board.getScore().scoreProperty());
 
         this.gameLoop = new Timeline(new KeyFrame(
-                Duration.millis(400),
+                Duration.millis(GAME_SPEED_MILLIS),
                 ae -> {
                     // 2. Perform the logic
                     DownData data = onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
@@ -109,15 +111,6 @@ public class GameController implements InputEventListener {
             stopTimeLine();
         }
     }
-
-    /*
-    Handles the brick moving down when a down event occurs.
-    - Checks if the game is not paused.
-    - Moves the brick down via the event listener.
-    - If a row was cleared, displays a score notification.
-    - Updates the visual representation of the brick (refreshBrick).
-    - Requests focus on the game panel to continue receiving input.
-     */
 
     public void stopTimeLine() {
         if (gameLoop != null) {

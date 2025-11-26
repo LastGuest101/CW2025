@@ -17,6 +17,8 @@ public class SimpleBoard implements Board {
     private int[][] currentGameMatrix;
     private Point currentOffset;
     private final Score score;
+    private static final int SPAWN_X = 4;
+    private static final int SPAWN_Y = 10;
 
     public SimpleBoard(int width, int height, BrickGenerator RandomBrickGenerator) {
         this.width = width;
@@ -87,7 +89,7 @@ public class SimpleBoard implements Board {
     public boolean createNewBrick() {
         Brick currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 10);
+        currentOffset = new Point(SPAWN_X, SPAWN_Y);
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 

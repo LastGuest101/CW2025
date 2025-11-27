@@ -12,7 +12,7 @@ import javafx.util.Duration;
 
 public class GameController implements InputEventListener {
 
-    private Board board = new SimpleBoard(25, 10, new RandomBrickGenerator());
+    private Board board = new SimpleBoard(10, 25, new RandomBrickGenerator());
 
     private final GameView gameView;
 

@@ -154,13 +154,28 @@ public class GuiController implements GameView, Initializable {
     private Paint getFillColor(int i) {
         return switch (i) {
             case 0 -> Color.TRANSPARENT;
-            case 1 -> Color.AQUA;
-            case 2 -> Color.BLUEVIOLET;
-            case 3 -> Color.DARKGREEN;
-            case 4 -> Color.YELLOW;
-            case 5 -> Color.RED;
-            case 6 -> Color.BEIGE;
-            case 7 -> Color.BURLYWOOD;
+
+            // 1. Strawberry (Pastel Red/Pink)
+            case 1 -> Color.web("#FFADAD");
+
+            // 2. Peach (Pastel Orange)
+            case 2 -> Color.web("#FFD6A5");
+
+            // 3. Pineapple (Pastel Yellow) e
+            case 3 -> Color.web("#FDFFB6");
+
+            // 4. Melon (Pastel Lime Green)
+            case 4 -> Color.web("#CAFFBF");
+
+            // 5. Watermelon (Pastel Mint/Cyan)
+            case 5 -> Color.web("#9BF6FF");
+
+            // 6. Blueberry (Pastel Periwinkle)
+            case 6 -> Color.web("#A0C4FF");
+
+            // 7. Grape (Pastel Lavender)
+            case 7 -> Color.web("#BDB2FF");
+
             default -> Color.WHITE;
         };
     }
@@ -194,9 +209,26 @@ public class GuiController implements GameView, Initializable {
     }
 
     private void setRectangleData(int color, Rectangle rectangle) {
-        rectangle.setFill(getFillColor(color));
-        rectangle.setArcHeight(9);
-        rectangle.setArcWidth(9);
+        Paint baseColor = getFillColor(color);
+        rectangle.setFill(baseColor);
+
+        rectangle.setArcHeight(0);
+        rectangle.setArcWidth(0);
+
+        if (color != 0) {
+
+            if (baseColor instanceof Color) {
+                rectangle.setStroke(((Color) baseColor).darker().darker());
+            } else {
+                rectangle.setStroke(Color.BLACK);
+            }
+
+            rectangle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
+
+            rectangle.setStrokeWidth(3);
+        } else {
+            rectangle.setStroke(null);
+        }
     }
 
 

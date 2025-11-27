@@ -102,6 +102,7 @@ public class GameController implements InputEventListener {
 
     @Override
     public void createNewGame() {
+        gameLoop.stop();
         board.newGame();
         gameView.refreshGameBackground(board.getBoardMatrix());
         gameLoop.play();

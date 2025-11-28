@@ -88,11 +88,11 @@ public class GuiController implements GameView, Initializable {
         keyActions.put(KeyCode.W, keyActions.get(KeyCode.UP));
 
         keyActions.put(KeyCode.DOWN, () -> {
-            // Ask the controller to move the brick
             DownData data = eventListener.onDownEvent(new MoveEvent(EventType.DOWN, EventSource.USER));
             updateView(data);
         });
         keyActions.put(KeyCode.S, keyActions.get(KeyCode.DOWN));
+
 
     }
     /*
@@ -106,9 +106,16 @@ public class GuiController implements GameView, Initializable {
             return;
         }
 
-        if (isPause.get() || isGameOver.get()) {
+        if (event.getCode() == KeyCode.P) {
+            boolean currentState = isPause.getValue();
+            isPause.setValue(!currentState);
+
+            eventListener.onPauseEvent();
             return;
         }
+        /*
+         Code for pause function to work
+         */
 
         Runnable action = keyActions.get(event.getCode());
 

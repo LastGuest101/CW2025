@@ -123,6 +123,18 @@ public class GameController implements InputEventListener {
     Used to stop the timeline when the game is closed
      */
 
+    @Override
+    public void onPauseEvent() {
+        if (gameLoop.getStatus() == javafx.animation.Animation.Status.RUNNING) {
+            gameLoop.pause();
+        } else {
+            gameLoop.play();
+        }
+    }
+    /*
+    Used to pause the game by pausing the timeline thread.
+     */
+
 
 
 }

@@ -3,8 +3,6 @@ package com.tetris.ui;
 import com.tetris.data.DownData;
 import com.tetris.data.ViewData;
 import com.tetris.gameLogic.MoveEvent;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,6 +19,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import javafx.scene.effect.DropShadow;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -53,6 +52,11 @@ public class GuiController implements GameView, Initializable {
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
     private HashMap<KeyCode, Runnable> keyActions;
+
+    private GridPane ghostPanel;
+
+    private Rectangle[][] ghostRectangles;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -134,6 +138,26 @@ public class GuiController implements GameView, Initializable {
     @Override
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
+        if (ghostPanel == null) {
+            ghostPanel = new GridPane();
+            ghostPanel.setVgap(1);
+            ghostPanel.setHgap(1);
+            ((javafx.scene.layout.Pane) brickPanel.getParent()).getChildren().add(ghostPanel);
+            ghostPanel.toBack();
+            gamePanel.getParent().toBack();
+        }
+
+        ghostPanel.getChildren().clear();
+        ghostRectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
+
+        for (int i = 0; i < brick.getBrickData().length; i++) {
+            for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+                Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                setGhostStyle(rectangle);
+                ghostRectangles[i][j] = rectangle;
+                ghostPanel.add(rectangle, j, i);
+            }
+        }
         for (int i = 2; i < boardMatrix.length; i++) {
             for (int j = 0; j < boardMatrix[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
@@ -203,12 +227,31 @@ public class GuiController implements GameView, Initializable {
     private void refreshBrick(ViewData brick) {
         if (isPause.getValue() == Boolean.FALSE) {
 
-            brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getHgap() + brick.getxPosition() * BRICK_SIZE);
-            brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getVgap() + brick.getyPosition() * BRICK_SIZE);
+            double xOffset = gamePanel.getLayoutX() + brick.getxPosition() * (BRICK_SIZE + gamePanel.getHgap());
+            double yOffset = -42 + gamePanel.getLayoutY() + brick.getyPosition() * (BRICK_SIZE + gamePanel.getVgap());
+
+            brickPanel.setLayoutX(xOffset);
+            brickPanel.setLayoutY(yOffset);
+
+            ghostPanel.setLayoutX(xOffset);
+
+            double ghostYOffset = -42 + gamePanel.getLayoutY() + brick.getGhostYPosition() * (BRICK_SIZE + gamePanel.getVgap());
+            ghostPanel.setLayoutY(ghostYOffset);
 
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+                    // Update Real Brick
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j], false);
+
+
+                    int colorValue = brick.getBrickData()[i][j];
+                    if (colorValue != 0) {
+                        ghostRectangles[i][j].setVisible(true);
+                        Paint realColor = getFillColor(colorValue);
+                        ghostRectangles[i][j].setStroke(realColor);
+                    } else {
+                        ghostRectangles[i][j].setVisible(false);
+                    }
                 }
             }
         }
@@ -230,8 +273,9 @@ public class GuiController implements GameView, Initializable {
         Paint baseColor = getFillColor(color);
         rectangle.setFill(baseColor);
 
-        rectangle.setArcHeight(0);
-        rectangle.setArcWidth(0);
+        // Retro sharp corners
+        rectangle.setArcHeight(10);
+        rectangle.setArcWidth(10);
 
         if (color != 0) {
             if (baseColor instanceof Color) {
@@ -240,9 +284,20 @@ public class GuiController implements GameView, Initializable {
                 rectangle.setStroke(Color.BLACK);
             }
             rectangle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
-            rectangle.setStrokeWidth(3);
+            rectangle.setStrokeWidth(2);
+
+            DropShadow glow = new DropShadow();
+
+            glow.setColor(baseColor instanceof Color ? (Color) baseColor : Color.GRAY);
+
+            glow.setRadius(2);
+
+            glow.setSpread(0);
+
+            rectangle.setEffect(glow);
 
         } else {
+            rectangle.setEffect(null);
 
             if (isBackground) {
                 rectangle.setStroke(Color.rgb(160, 82, 45, 0.25));
@@ -294,6 +349,18 @@ public class GuiController implements GameView, Initializable {
             notificationPanel.showScore(groupNotification.getChildren());
         }
         refreshBrick(downData.getViewData());
+    }
+
+    private void setGhostStyle(Rectangle rectangle) {
+
+        rectangle.setFill(Color.web("#666666", 0.3));
+
+        rectangle.setStroke(Color.web("#666666", 0.6));
+
+        rectangle.setArcHeight(10);
+        rectangle.setArcWidth(10);
+        rectangle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
+        rectangle.setStrokeWidth(1);
     }
 
 }

@@ -53,6 +53,16 @@ public class GameController implements InputEventListener {
     /*
     checks if block has moved down or has intersected.
      */
+    @Override
+    public DownData onSpaceEvent(MoveEvent event){
+
+        while(board.moveBrickDown()){
+            handleSuccessfulMoveDown(event);
+
+        }
+
+        return handleIntersect();
+    }
 
     private void handleSuccessfulMoveDown(MoveEvent event) {
         if (event.getEventSource() == EventSource.USER) {

@@ -93,6 +93,11 @@ public class GuiController implements GameView, Initializable {
         });
         keyActions.put(KeyCode.S, keyActions.get(KeyCode.DOWN));
 
+        keyActions.put(KeyCode.SPACE, () -> {
+            DownData data = eventListener.onSpaceEvent(new MoveEvent(EventType.SPACE, EventSource.USER));
+            updateView(data);
+        });
+
 
     }
     /*

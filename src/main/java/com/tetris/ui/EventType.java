@@ -1,5 +1,5 @@
 package com.tetris.ui;
 
 public enum EventType {
-    DOWN, LEFT, RIGHT, ROTATE
+    DOWN, LEFT, RIGHT, SPACE, ROTATE
 }

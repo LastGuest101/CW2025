@@ -50,7 +50,7 @@
 
             <VBox alignment="CENTER" spacing="5" styleClass="nextBrickBox">
                 <Label text="NEXT" styleClass="sidebarLabel"/>
-                <Pane fx:id="nextBrickPane" prefWidth="80" prefHeight="80"/>
+                <Pane fx:id="nextBrickPane" prefWidth="300" prefHeight="80"/>
             </VBox>
 
             <VBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 0 0;">

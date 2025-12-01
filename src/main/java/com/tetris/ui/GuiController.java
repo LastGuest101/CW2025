@@ -52,6 +52,11 @@ public class GuiController implements GameView, Initializable {
 
     @FXML private Label highScoreLabel;
 
+    @FXML private Pane nextBrickPane;
+
+
+    private final java.util.List<Rectangle[][]> nextBrickGrids = new java.util.ArrayList<>();
+
     private Rectangle[][] displayMatrix;
 
     private InputEventListener eventListener;
@@ -148,48 +153,37 @@ public class GuiController implements GameView, Initializable {
 
     @Override
     public void initGameView(int[][] boardMatrix, ViewData brick) {
-        // 1. SETUP THE STACKPANE
-        // This container will hold the Background, Ghost, and Brick on top of each other
         StackPane gameArea = new StackPane();
         gameArea.setAlignment(Pos.TOP_LEFT);
 
-        // 2. CONFIGURE BACKGROUND GRID (Game Panel)
-        // Take gamePanel out of the BorderPane
         BorderPane gameBoard = (BorderPane) gamePanel.getParent();
         gameBoard.setCenter(null);
 
-        // CRITICAL FIX: Remove default padding that shifts the grid
         gamePanel.setPadding(Insets.EMPTY);
-        gameArea.getChildren().add(gamePanel); // Layer 1 (Bottom)
+        gameArea.getChildren().add(gamePanel);
 
-        // 3. CONFIGURE GHOST PANEL
         if (ghostPanel == null) {
             ghostPanel = new GridPane();
             ghostPanel.setVgap(1);
             ghostPanel.setHgap(1);
         }
-        ghostPanel.setPadding(Insets.EMPTY); // FIX: Ensure no padding
-        ghostPanel.getChildren().clear();    // FIX: Clear old ghosts
-        ghostPanel.setManaged(false);        // Allow manual positioning
-        gameArea.getChildren().add(ghostPanel); // Layer 2 (Middle)
+        ghostPanel.setPadding(Insets.EMPTY);
+        ghostPanel.getChildren().clear();
+        ghostPanel.setManaged(false);
+        gameArea.getChildren().add(ghostPanel);
 
-        // 4. CONFIGURE FALLING BRICK PANEL
-        // Take brickPanel out of the root layout and put it in our Stack
         if (brickPanel.getParent() != gameArea) {
             if (brickPanel.getParent() != null) {
                 ((Pane) brickPanel.getParent()).getChildren().remove(brickPanel);
             }
-            gameArea.getChildren().add(brickPanel); // Layer 3 (Top)
+            gameArea.getChildren().add(brickPanel);
         }
-        brickPanel.setPadding(Insets.EMPTY); // FIX: Ensure no padding
-        brickPanel.getChildren().clear();    // FIX: Clear old bricks
-        brickPanel.setManaged(false);        // Allow manual positioning
+        brickPanel.setPadding(Insets.EMPTY);
+        brickPanel.getChildren().clear();
+        brickPanel.setManaged(false);
 
-        // 5. FINALIZE LAYOUT
-        // Put our new container back into the Gold Border
         gameBoard.setCenter(gameArea);
 
-        // --- DRAW BACKGROUND ---
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = 2; i < boardMatrix.length; i++) {
             for (int j = 0; j < boardMatrix[i].length; j++) {
@@ -200,7 +194,6 @@ public class GuiController implements GameView, Initializable {
             }
         }
 
-        // --- DRAW BRICK & GHOST ---
         ghostRectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
         rectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
 
@@ -218,6 +211,44 @@ public class GuiController implements GameView, Initializable {
                 rectangles[i][j] = brickRect;
                 brickPanel.add(brickRect, j, i);
             }
+
+
+        }
+        nextBrickPane.getChildren().clear();
+        nextBrickGrids.clear();
+
+        int nextCount = 3;
+        int brickWidth = 4 * BRICK_SIZE; // 80px (Width of one piece)
+        int gap = 20; // Space between pieces
+
+        // Calculate total width of the 3 blocks + gaps
+        double contentWidth = (brickWidth * nextCount) + (gap * (nextCount - 1));
+
+        // Get the pane width from FXML (400px) to calculate centering offset
+        double paneWidth = nextBrickPane.getPrefWidth();
+        double startX = (paneWidth - contentWidth) / 2;
+
+        for (int n = 0; n < nextCount; n++) {
+            Rectangle[][] grid = new Rectangle[4][4];
+
+            // Calculate the starting X for THIS specific brick
+            double brickOffsetX = startX + (n * (brickWidth + gap));
+
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                    setRectangleData(0, rectangle, false); // Default empty
+
+                    // Position X: Offset + Column
+                    rectangle.setX(brickOffsetX + (j * BRICK_SIZE));
+                    // Position Y: Row (No vertical offset needed for horizontal layout)
+                    rectangle.setY(i * BRICK_SIZE);
+
+                    nextBrickPane.getChildren().add(rectangle);
+                    grid[i][j] = rectangle;
+                }
+            }
+            nextBrickGrids.add(grid);
         }
 
         refreshBrick(brick);
@@ -293,6 +324,24 @@ public class GuiController implements GameView, Initializable {
                         ghostRectangles[i][j].setVisible(true);
                     } else {
                         ghostRectangles[i][j].setVisible(false);
+                    }
+                }
+            }
+            int[][][] nextBricks = brick.getNextBricksData(); // Get the array of 3 matrices
+
+            // Loop through each preview grid (0 to 2)
+            for (int n = 0; n < nextBrickGrids.size(); n++) {
+
+                // Safety check: ensure we have data for this grid
+                if (n < nextBricks.length) {
+                    int[][] matrix = nextBricks[n];
+                    Rectangle[][] grid = nextBrickGrids.get(n);
+
+                    // Update the 4x4 grid for this specific preview
+                    for (int i = 0; i < 4; i++) {
+                        for (int j = 0; j < 4; j++) {
+                            setRectangleData(matrix[i][j], grid[i][j], false);
+                        }
                     }
                 }
             }

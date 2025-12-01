@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class RandomBrickGenerator implements BrickGenerator {
 
     private final List<Brick> brickList;
-
     private final Deque<Brick> nextBricks = new ArrayDeque<>();
 
     public RandomBrickGenerator() {
@@ -21,32 +21,31 @@ public class RandomBrickGenerator implements BrickGenerator {
         brickList.add(new SBrick());
         brickList.add(new TBrick());
         brickList.add(new ZBrick());
-        nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
-        nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
+
+        refillQueue();
     }
-    /*
-    Makes a queue of all the tetris blocks and adds 2 random blocks onto the queue
-    to represent the current and next blocks to fall.
-     */
+
+    private void refillQueue() {
+        while (nextBricks.size() < 4) {
+            nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
+        }
+    }
 
     @Override
     public Brick getBrick() {
-        if (nextBricks.size() <= 1) {
-            nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
-        }
+        refillQueue();
         return nextBricks.poll();
     }
-    /*
-    Retrieves and removes the front brick from the queue.
-    If the queue size is less than or equal to one before removal,
-    a new random brick is generated and added to the queue to ensure the next brick is ready.
-     */
 
     @Override
     public Brick getNextBrick() {
+        refillQueue();
         return nextBricks.peek();
     }
-    /*
-    Gets the info of the next brick without removing it from the queue.
-     */
+
+    @Override
+    public List<Brick> getNextBricks(int count) {
+        refillQueue();
+        return nextBricks.stream().limit(count).collect(Collectors.toList());
+    }
 }

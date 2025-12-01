@@ -36,17 +36,42 @@
 /* --- SIDEBAR UI --- */
 
 .sidebar {
-    -fx-padding: 40px 30px 0 0;
-    -fx-min-width: 200px;
+    -fx-padding: 24px 10px 0 0;
+    -fx-min-width: 150px;
 }
 
-.scoreBox, .nextBrick {
-    -fx-background-color: rgba(255, 255, 255, 0.6); /* More transparent/glassy */
+.nextBrickBox {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-padding: 15px;
+    -fx-max-width: 310px;
+
+    -fx-border-color: #DEB887;
+    -fx-border-width: 2px;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+.scoreBox, .highScoreBox {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
     -fx-background-radius: 15px;
     -fx-border-radius: 15px;
     -fx-padding: 15px;
 
-    -fx-border-color: #DEB887; /* Burlywood */
+    -fx-border-color: #DEB887;
+    -fx-border-width: 2px;
+    -fx-max-width: 200px;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+.scoreBox {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-padding: 15px;
+
+    -fx-border-color: #DEB887;
     -fx-border-width: 2px;
 
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);

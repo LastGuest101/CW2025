@@ -121,12 +121,19 @@ public class SimpleBoard implements Board {
 
     @Override
     public ViewData getViewData() {
+        var nextBricks = brickGenerator.getNextBricks(3);
+
+        int[][][] nextBricksData = new int[nextBricks.size()][][];
+        for (int i = 0; i < nextBricks.size(); i++) {
+            nextBricksData[i] = nextBricks.get(i).getShapeMatrix().get(0);
+        }
+
         return new ViewData(
                 brickRotator.getCurrentShape(),
                 (int) currentOffset.getX(),
                 (int) currentOffset.getY(),
                 getGhostY(),
-                brickGenerator.getNextBrick().getShapeMatrix().get(0)
+                nextBricksData
         );
     }
 

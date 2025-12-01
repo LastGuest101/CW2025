@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -46,6 +47,10 @@ public class GuiController implements GameView, Initializable {
 
     @FXML
     private GameOverPanel gameOverPanel;
+
+    @FXML private Label scoreLabel;
+
+    @FXML private Label highScoreLabel;
 
     private Rectangle[][] displayMatrix;
 
@@ -353,10 +358,13 @@ public class GuiController implements GameView, Initializable {
     }
 
     public void bindScore(IntegerProperty integerProperty) {
+        scoreLabel.textProperty().bind(integerProperty.asString());
     }
-    /*
-    Needs to be implemented.
-     */
+
+    public void bindHighScore(IntegerProperty integerProperty) {
+        highScoreLabel.textProperty().bind(integerProperty.asString());
+    }
+
 
     public void gameOver() {
         gameOverPanel.setVisible(true);
@@ -372,12 +380,14 @@ public class GuiController implements GameView, Initializable {
     }
 
     public void pauseGame(ActionEvent actionEvent) {
-        gamePanel.requestFocus();
-    }
+        boolean currentState = isPause.getValue();
+        isPause.setValue(!currentState);
 
-    /*
-    Needs to be implemented
-     */
+        eventListener.onPauseEvent();
+
+        gamePanel.requestFocus();
+        }
+
 
     public void updateView(DownData downData) {
         if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {

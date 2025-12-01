@@ -33,19 +33,29 @@
 
     <right>
         <VBox alignment="TOP_CENTER" spacing="20" styleClass="sidebar">
+
+            <VBox alignment="CENTER" spacing="-5">
+                <Label text="TETRIS" styleClass="gameTitle"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="5" styleClass="highScoreBox">
+                <Label text="👑 HighScore" styleClass="sidebarLabel"/>
+                <Label fx:id="highScoreLabel" text="0" styleClass="scoreValue"/>
+            </VBox>
+
             <VBox alignment="CENTER" spacing="5" styleClass="scoreBox">
-                <Label text="SCORE" styleClass="sidebarLabel"/>
+                <Label text="🏆 SCORE" styleClass="sidebarLabel"/>
                 <Label fx:id="scoreLabel" text="0" styleClass="scoreValue"/>
             </VBox>
 
-            <VBox alignment="CENTER" spacing="5">
+            <VBox alignment="CENTER" spacing="5" styleClass="nextBrickBox">
                 <Label text="NEXT" styleClass="sidebarLabel"/>
-                <Pane fx:id="nextBrickPane" prefWidth="80" prefHeight="80" styleClass="nextBrick"/>
+                <Pane fx:id="nextBrickPane" prefWidth="80" prefHeight="80"/>
             </VBox>
 
-            <VBox alignment="CENTER" spacing="10">
-                <Button text="New Game" onAction="#newGame" styleClass="gameButton"/>
-                <Button text="Pause (P)" onAction="#pauseGame" styleClass="gameButton"/>
+            <VBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 0 0;">
+                <Button text="🔄 New Game" onAction="#newGame" styleClass="gameButton, actionButton"/>
+                <Button text="⏸ Pause" onAction="#pauseGame" styleClass="gameButton, secondaryButton"/>
             </VBox>
         </VBox>
     </right>

@@ -133,3 +133,19 @@
     -fx-stroke: grey;
     -fx-stroke-width: 2px;
 }
+.gameTitle {
+    /* Large, bold font */
+    -fx-font-family: "Verdana", "Arial Rounded MT Bold", sans-serif;
+    -fx-font-size: 40px;
+    -fx-font-weight: 900; /* Extra Bold */
+
+    /* Soft Sunset Orange (Matches Game Over text) */
+    -fx-text-fill: #FF7043;
+
+    /* Two shadows:
+       1. A white "glow" to help it stand out against the wheat background
+       2. A soft brown drop shadow for depth
+    */
+    -fx-effect: dropshadow(gaussian, white, 0, 0, 0, 3),
+                dropshadow(gaussian, rgba(160, 82, 45, 0.3), 5, 0.5, 2, 2);
+}

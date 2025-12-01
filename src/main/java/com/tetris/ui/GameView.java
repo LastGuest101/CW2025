@@ -10,5 +10,6 @@ public interface GameView {
     void updateView(DownData data);
     void gameOver();
     void bindScore(IntegerProperty scoreProperty);
+    void bindHighScore(IntegerProperty scoreProperty);
     void setEventListener(InputEventListener listener);
 }

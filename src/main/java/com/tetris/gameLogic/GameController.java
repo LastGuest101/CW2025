@@ -27,6 +27,8 @@ public class GameController implements InputEventListener {
         gameView.setEventListener(this); // Calls are the same, but now loose coupled
         gameView.initGameView(board.getBoardMatrix(), board.getViewData());
         gameView.bindScore(board.getScore().scoreProperty());
+        gameView.bindHighScore(board.getScore().highScoreProperty());
+
 
         this.gameLoop = new Timeline(new KeyFrame(
                 Duration.millis(GAME_SPEED_MILLIS),
@@ -67,6 +69,7 @@ public class GameController implements InputEventListener {
     private void handleSuccessfulMoveDown(MoveEvent event) {
         if (event.getEventSource() == EventSource.USER) {
             board.getScore().add(1);
+            board.getScore().updateHighscore(board.getScore().scoreProperty());
         }
     }
     /*
@@ -78,6 +81,7 @@ public class GameController implements InputEventListener {
         ClearRow clearRow = board.clearRows();
         if (clearRow != null && clearRow.getLinesRemoved() > 0) {
             board.getScore().add(clearRow.getScoreBonus());
+            board.getScore().updateHighscore(board.getScore().scoreProperty());
         }
         if (board.createNewBrick()) {
             gameLoop.stop();
@@ -112,6 +116,7 @@ public class GameController implements InputEventListener {
 
     @Override
     public void createNewGame() {
+        board.getScore().updateHighscore(board.getScore().scoreProperty());
         gameLoop.stop();
         board.newGame();
         gameView.refreshGameBackground(board.getBoardMatrix());

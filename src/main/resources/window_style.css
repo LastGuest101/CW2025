@@ -1,60 +1,135 @@
+/* --- SOFT WARM AESTHETIC --- */
+
+/* 1. The Background: Blended Wheat Gradient */
 .root {
-    -fx-background-color: #F5DEB3;
+    /* Blends from Wheat (Top) to Cornsilk (Bottom) */
+    /* This creates a warm, glowing effect instead of a flat wall */
+    -fx-background-color: linear-gradient(to bottom, #F5DEB3 0%, #FFF8DC 100%);
 }
 
+/* 2. The Game Jar (Glass Container) */
 .gameBoard {
-    -fx-border-color: #F4D03F;
+    /* Softer Golden/Amber Border */
+    -fx-border-color: #FFD54F;
     -fx-border-width: 8px;
 
-    /* Rounded corners */
+    /* Rounded Corners */
     -fx-border-radius: 15px 15px 5px 5px;
     -fx-background-radius: 15px 15px 5px 5px;
 
-    -fx-background-color: rgba(255, 255, 255, 0.3);
+    /* Glass Effect */
+    -fx-background-color: rgba(255, 255, 255, 0.35);
 
-    /* Subtle shadow */
+    /* Soft, dreamy shadow */
+    -fx-effect: dropshadow(gaussian, rgba(160, 82, 45, 0.15), 20, 0, 0, 8);
+}
+
+/* 3. The Grid Lines (Essential for gameplay) */
+#gamePanel {
+    -fx-background-size: 21px 21px;
+    /* Warm Sienna lines at low opacity */
+    -fx-background-image:
+        linear-gradient(to right, rgba(160, 82, 45, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(160, 82, 45, 0.15) 1px, transparent 1px);
+}
+
+/* --- SIDEBAR UI --- */
+
+.sidebar {
+    -fx-padding: 40px 30px 0 0;
+    -fx-min-width: 200px;
+}
+
+.scoreBox, .nextBrick {
+    -fx-background-color: rgba(255, 255, 255, 0.6); /* More transparent/glassy */
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-padding: 15px;
+
+    -fx-border-color: #DEB887; /* Burlywood */
+    -fx-border-width: 2px;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+/* --- FONTS --- */
+/* Using standard fonts that look clean */
+
+.sidebarLabel {
+    -fx-font-family: "Verdana", "Arial Rounded MT Bold", sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #8B5A2B; /* Warm brown */
+}
+
+.scoreValue {
+    -fx-font-family: "Verdana", "Arial Rounded MT Bold", sans-serif;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #A0522D; /* Sienna */
+}
+
+.nextBrickLabel {
+    -fx-font-family: "Verdana";
+    -fx-font-size: 14px;
+    -fx-text-fill: #8B5A2B;
+}
+
+/* --- BUTTONS --- */
+
+.gameButton {
+    -fx-font-family: "Verdana", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+
+    /* Soft Gradient Button */
+    -fx-background-color: linear-gradient(to bottom, #FFECB3, #FFD54F);
+    -fx-text-fill: #6D4C41;
+
+    -fx-background-radius: 25px;
+    -fx-border-radius: 25px;
+    -fx-padding: 10px 25px;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.gameButton:hover {
+    -fx-background-color: linear-gradient(to bottom, #FFF8E1, #FFECB3);
+    -fx-translate-y: -1px;
+}
+
+.gameButton:pressed {
+    -fx-background-color: #FFCA28;
+    -fx-translate-y: 1px;
+}
+
+/* Game Over Style */
+.gameOverStyle {
+    -fx-font-family: "Verdana", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 40;
+    -fx-text-fill: #FF7043; /* Soft Sunset Orange */
+    -fx-background-color: rgba(255, 250, 240, 0.95);
+    -fx-padding: 20px;
+    -fx-background-radius: 20px;
+    -fx-border-color: #FFD54F;
+    -fx-border-width: 4px;
+    -fx-border-radius: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 
-#gamePanel {
-    -fx-background-size: 21px 21px;
+/* 5. Bonus Points (+100 popup) - Cute Pastel Style */
+.bonusStyle {
+    -fx-font-family: "Let's go Digital", "Verdana", sans-serif;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
 
-    -fx-background-image:
-        linear-gradient(to right, rgba(160, 82, 45, 0.25) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(160, 82, 45, 0.25) 1px, transparent 1px);
-}
+    /* Pastel Orange/Peach Text */
+    -fx-text-fill: #62fc95;
 
-/* 4. The "Next Brick" Box */
-.nextBrick {
-    -fx-border-color: #F4D03F;
-    -fx-border-width: 4px;
-    -fx-background-color: rgba(255, 255, 255, 0.3);
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-}
-
-/* Text Styles */
-.nextBrickLabel {
-    -fx-font-family: "Let's go Digital";
-    -fx-padding: 20px 0 0 0;
-    -fx-font-size: 16px;
-    -fx-text-fill: #5D4037;
-}
-
-.scoreClass {
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 38;
-    -fx-fill: #5D4037;
-    -fx-text-fill: #5D4037;
-}
-
-.gameOverStyle {
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 48;
-    -fx-text-fill: #FF4D4D;
-    -fx-background-color: rgba(255, 255, 255, 0.9);
-    -fx-padding: 10px;
-    -fx-background-radius: 10px;
-    -fx-border-color: #F4D03F;
-    -fx-border-width: 4px;
+    /* White "Sticker" Outline (Multiple shadows create a solid stroke) */
+    -fx-effect: dropshadow(gaussian, grey, 0, 0, 2, 2);
+    -fx-stroke: grey;
+    -fx-stroke-width: 2px;
 }

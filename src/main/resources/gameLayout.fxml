@@ -1,26 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <?import com.tetris.ui.GameOverPanel?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
-<Pane fx:controller="com.tetris.ui.GuiController"
-      xmlns:fx="http://javafx.com/fxml">
-    <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
-    <BorderPane styleClass="gameBoard" fx:id="gameBoard">
-        <center>
-            <GridPane fx:id="gamePanel" hgap="1" vgap="1" layoutY="30" layoutX="40"/>
-        </center>
-    </BorderPane>
 
-    <Group fx:id="groupNotification" layoutX="14" layoutY="203">
-        <VBox alignment="CENTER">
-            <GameOverPanel fx:id="gameOverPanel"/>
+<BorderPane fx:controller="com.tetris.ui.GuiController"
+            xmlns:fx="http://javafx.com/fxml"
+            styleClass="root">
+
+    <center>
+        <StackPane>
+            <BorderPane fx:id="gameBoard" styleClass="gameBoard" maxWidth="-Infinity" maxHeight="-Infinity">
+                <center>
+                    <GridPane fx:id="gamePanel" hgap="1" vgap="1"/>
+                </center>
+            </BorderPane>
+
+            <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
+
+            <Group fx:id="groupNotification">
+                <GameOverPanel fx:id="gameOverPanel"/>
+            </Group>
+        </StackPane>
+    </center>
+
+    <right>
+        <VBox alignment="TOP_CENTER" spacing="20" styleClass="sidebar">
+            <VBox alignment="CENTER" spacing="5" styleClass="scoreBox">
+                <Label text="SCORE" styleClass="sidebarLabel"/>
+                <Label fx:id="scoreLabel" text="0" styleClass="scoreValue"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="NEXT" styleClass="sidebarLabel"/>
+                <Pane fx:id="nextBrickPane" prefWidth="80" prefHeight="80" styleClass="nextBrick"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="10">
+                <Button text="New Game" onAction="#newGame" styleClass="gameButton"/>
+                <Button text="Pause (P)" onAction="#pauseGame" styleClass="gameButton"/>
+            </VBox>
         </VBox>
-    </Group>
+    </right>
+
+    <left>
+        <Pane prefWidth="50" />
+    </left>
+
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>
-</Pane>
+</BorderPane>

@@ -25,6 +25,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.geometry.Insets;
+
 public class GuiController implements GameView, Initializable {
 
     private static final int BRICK_SIZE = 20;
@@ -137,50 +143,79 @@ public class GuiController implements GameView, Initializable {
 
     @Override
     public void initGameView(int[][] boardMatrix, ViewData brick) {
-        displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
+        // 1. SETUP THE STACKPANE
+        // This container will hold the Background, Ghost, and Brick on top of each other
+        StackPane gameArea = new StackPane();
+        gameArea.setAlignment(Pos.TOP_LEFT);
+
+        // 2. CONFIGURE BACKGROUND GRID (Game Panel)
+        // Take gamePanel out of the BorderPane
+        BorderPane gameBoard = (BorderPane) gamePanel.getParent();
+        gameBoard.setCenter(null);
+
+        // CRITICAL FIX: Remove default padding that shifts the grid
+        gamePanel.setPadding(Insets.EMPTY);
+        gameArea.getChildren().add(gamePanel); // Layer 1 (Bottom)
+
+        // 3. CONFIGURE GHOST PANEL
         if (ghostPanel == null) {
             ghostPanel = new GridPane();
             ghostPanel.setVgap(1);
             ghostPanel.setHgap(1);
-            ((javafx.scene.layout.Pane) brickPanel.getParent()).getChildren().add(ghostPanel);
-            ghostPanel.toBack();
-            gamePanel.getParent().toBack();
         }
+        ghostPanel.setPadding(Insets.EMPTY); // FIX: Ensure no padding
+        ghostPanel.getChildren().clear();    // FIX: Clear old ghosts
+        ghostPanel.setManaged(false);        // Allow manual positioning
+        gameArea.getChildren().add(ghostPanel); // Layer 2 (Middle)
 
-        ghostPanel.getChildren().clear();
-        ghostRectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
-
-        for (int i = 0; i < brick.getBrickData().length; i++) {
-            for (int j = 0; j < brick.getBrickData()[i].length; j++) {
-                Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-                setGhostStyle(rectangle);
-                ghostRectangles[i][j] = rectangle;
-                ghostPanel.add(rectangle, j, i);
+        // 4. CONFIGURE FALLING BRICK PANEL
+        // Take brickPanel out of the root layout and put it in our Stack
+        if (brickPanel.getParent() != gameArea) {
+            if (brickPanel.getParent() != null) {
+                ((Pane) brickPanel.getParent()).getChildren().remove(brickPanel);
             }
+            gameArea.getChildren().add(brickPanel); // Layer 3 (Top)
         }
+        brickPanel.setPadding(Insets.EMPTY); // FIX: Ensure no padding
+        brickPanel.getChildren().clear();    // FIX: Clear old bricks
+        brickPanel.setManaged(false);        // Allow manual positioning
+
+        // 5. FINALIZE LAYOUT
+        // Put our new container back into the Gold Border
+        gameBoard.setCenter(gameArea);
+
+        // --- DRAW BACKGROUND ---
+        displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = 2; i < boardMatrix.length; i++) {
             for (int j = 0; j < boardMatrix[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-
                 setRectangleData(0, rectangle, true);
-
                 displayMatrix[i][j] = rectangle;
                 gamePanel.add(rectangle, j, i - 2);
             }
         }
 
+        // --- DRAW BRICK & GHOST ---
+        ghostRectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
         rectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
+
         for (int i = 0; i < brick.getBrickData().length; i++) {
             for (int j = 0; j < brick.getBrickData()[i].length; j++) {
-                Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-                setRectangleData(brick.getBrickData()[i][j], rectangle, false);
+                // Ghost Rect
+                Rectangle ghostRect = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                setGhostStyle(ghostRect);
+                ghostRectangles[i][j] = ghostRect;
+                ghostPanel.add(ghostRect, j, i);
 
-                rectangles[i][j] = rectangle;
-                brickPanel.add(rectangle, j, i);
+                // Real Brick Rect
+                Rectangle brickRect = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                setRectangleData(brick.getBrickData()[i][j], brickRect, false);
+                rectangles[i][j] = brickRect;
+                brickPanel.add(brickRect, j, i);
             }
         }
-        brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getHgap() + brick.getxPosition() * BRICK_SIZE);
-        brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getVgap() + brick.getyPosition() * BRICK_SIZE);
+
+        refreshBrick(brick);
     }
 
     /*
@@ -227,28 +262,30 @@ public class GuiController implements GameView, Initializable {
     private void refreshBrick(ViewData brick) {
         if (isPause.getValue() == Boolean.FALSE) {
 
-            double xOffset = gamePanel.getLayoutX() + brick.getxPosition() * (BRICK_SIZE + gamePanel.getHgap());
-            double yOffset = -42 + gamePanel.getLayoutY() + brick.getyPosition() * (BRICK_SIZE + gamePanel.getVgap());
+            // 20px block + 1px gap = 21px total per cell
+            int cellSize = BRICK_SIZE + 1;
 
-            brickPanel.setLayoutX(xOffset);
-            brickPanel.setLayoutY(yOffset);
+            // Calculate Exact Pixels
+            double xPos = brick.getxPosition() * cellSize;
+            // The -42 offset hides the top 2 rows (2 * 21px = 42px)
+            double yPos = (brick.getyPosition() * cellSize) - 42;
+            double ghostYPos = (brick.getGhostYPosition() * cellSize) - 42;
 
-            ghostPanel.setLayoutX(xOffset);
+            // Apply positions using Translation
+            brickPanel.setTranslateX(xPos);
+            brickPanel.setTranslateY(yPos);
 
-            double ghostYOffset = -42 + gamePanel.getLayoutY() + brick.getGhostYPosition() * (BRICK_SIZE + gamePanel.getVgap());
-            ghostPanel.setLayoutY(ghostYOffset);
+            ghostPanel.setTranslateX(xPos);
+            ghostPanel.setTranslateY(ghostYPos);
 
+            // Update Visibility & Colors
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
-                    // Update Real Brick
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j], false);
-
 
                     int colorValue = brick.getBrickData()[i][j];
                     if (colorValue != 0) {
                         ghostRectangles[i][j].setVisible(true);
-                        Paint realColor = getFillColor(colorValue);
-                        ghostRectangles[i][j].setStroke(realColor);
                     } else {
                         ghostRectangles[i][j].setVisible(false);
                     }

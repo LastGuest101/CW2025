@@ -6,6 +6,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+import java.util.Collections;
 
 public class RandomBrickGenerator implements BrickGenerator {
 
@@ -26,8 +27,12 @@ public class RandomBrickGenerator implements BrickGenerator {
     }
 
     private void refillQueue() {
-        while (nextBricks.size() < 4) {
-            nextBricks.add(brickList.get(ThreadLocalRandom.current().nextInt(brickList.size())));
+        while (nextBricks.size() < 7) {
+            List<Brick> bag = new ArrayList<>(brickList);
+            Collections.shuffle(bag);
+            nextBricks.addAll(bag);
+
+
         }
     }
 

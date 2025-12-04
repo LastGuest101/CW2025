@@ -1,6 +1,6 @@
 package com.tetris.gameLogic;
 
-import com.tetris.logic.bricks.Brick;
+import com.tetris.bricks.Brick;
 
 public class BrickRotator {
 

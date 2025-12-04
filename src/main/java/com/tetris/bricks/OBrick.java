@@ -1,4 +1,4 @@
-package com.tetris.logic.bricks;
+package com.tetris.bricks;
 
 public final class OBrick extends GeneralBrick {
 

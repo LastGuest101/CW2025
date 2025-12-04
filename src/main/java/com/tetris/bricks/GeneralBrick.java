@@ -1,4 +1,4 @@
-package com.tetris.logic.bricks;
+package com.tetris.bricks;
 
 import com.tetris.gameLogic.MatrixOperations;
 

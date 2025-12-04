@@ -2,9 +2,8 @@ package com.tetris.board;
 
 import com.tetris.data.ViewData;
 import com.tetris.gameLogic.*;
-import com.tetris.logic.bricks.Brick;
-import com.tetris.logic.bricks.BrickGenerator;
-import com.tetris.logic.bricks.RandomBrickGenerator;
+import com.tetris.bricks.Brick;
+import com.tetris.bricks.BrickGenerator;
 
 import java.awt.*;
 

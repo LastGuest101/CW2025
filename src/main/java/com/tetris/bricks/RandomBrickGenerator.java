@@ -1,10 +1,9 @@
-package com.tetris.logic.bricks;
+package com.tetris.bricks;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.Collections;
 

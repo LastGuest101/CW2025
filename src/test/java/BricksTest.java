@@ -1,5 +1,5 @@
 
-import com.tetris.logic.bricks.*;
+import com.tetris.bricks.*;
 
 import org.junit.jupiter.api.Test;
 

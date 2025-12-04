@@ -17,6 +17,7 @@ public class SimpleBoard implements Board {
     private int[][] currentGameMatrix;
     private Point currentOffset;
     private final Score score;
+    private final ScoringSystem scoringSystem;
     private static final int SPAWN_X = 4;
     private static final int SPAWN_Y = -1;
 
@@ -27,6 +28,7 @@ public class SimpleBoard implements Board {
         this.brickGenerator = RandomBrickGenerator;
         this.brickRotator = new BrickRotator();
         score = new Score();
+       this.scoringSystem = new ScoringSystem();
     }
 
     /*
@@ -148,9 +150,9 @@ public class SimpleBoard implements Board {
 
         currentGameMatrix = result.getNewMatrix();
         int lines = result.getLinesRemoved();
-        int score = 50 * lines * lines;
+        int points = scoringSystem.calculateScore(lines);
 
-        return new ClearRow(lines, result.getNewMatrix(), score);
+        return new ClearRow(lines, result.getNewMatrix(), points);
 
     }
 

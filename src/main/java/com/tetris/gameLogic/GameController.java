@@ -20,8 +20,11 @@ public class GameController implements InputEventListener {
 
     private static final double GAME_SPEED_MILLIS = 400;
 
+    private final SoundManager soundManager;
+
     public GameController(GameView view) {
         this.gameView = view; // Assign to interface field
+        this.soundManager = new SoundManager();
 
         board.createNewBrick();
         gameView.setEventListener(this); // Calls are the same, but now loose coupled
@@ -40,6 +43,7 @@ public class GameController implements InputEventListener {
                 }
         ));
         gameLoop.setCycleCount(Timeline.INDEFINITE);
+        soundManager.playMusic();
         gameLoop.play();
     }
 
@@ -70,6 +74,7 @@ public class GameController implements InputEventListener {
         if (event.getEventSource() == EventSource.USER) {
             board.getScore().add(1);
             board.getScore().updateHighscore(board.getScore().scoreProperty());
+            // Optional: soundManager.playMove(); (might be too noisy for drops)
         }
     }
     /*
@@ -77,11 +82,13 @@ public class GameController implements InputEventListener {
      */
 
     private DownData handleIntersect() {
+        soundManager.playDrop(); // Piece landed!
         board.mergeBrickToBackground();
         ClearRow clearRow = board.clearRows();
+
         if (clearRow != null && clearRow.getLinesRemoved() > 0) {
+            soundManager.playClearLine(); // BOOM! Lines cleared
             board.getScore().add(clearRow.getScoreBonus());
-            board.getScore().updateHighscore(board.getScore().scoreProperty());
         }
         if (board.createNewBrick()) {
             gameLoop.stop();
@@ -97,19 +104,25 @@ public class GameController implements InputEventListener {
 
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
-        board.moveBrickLeft();
+        if (board.moveBrickLeft()) { // Check if it actually moved
+            soundManager.playMove();
+        }
         return board.getViewData();
     }
 
     @Override
     public ViewData onRightEvent(MoveEvent event) {
-        board.moveBrickRight();
+        if (board.moveBrickRight()) {
+            soundManager.playMove();
+        }
         return board.getViewData();
     }
 
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
-        board.rotateLeftBrick();
+        if (board.rotateLeftBrick()) {
+            soundManager.playRotate();
+        }
         return board.getViewData();
     }
 
@@ -141,7 +154,7 @@ public class GameController implements InputEventListener {
     @Override
     public void onPauseEvent() {
         if (gameLoop.getStatus() == javafx.animation.Animation.Status.RUNNING) {
-            gameLoop.pause();
+            gameLoop.pause();;
         } else {
             gameLoop.play();
         }
@@ -149,6 +162,11 @@ public class GameController implements InputEventListener {
     /*
     Used to pause the game by pausing the timeline thread.
      */
+
+    @Override
+    public void muteMusic(){
+        soundManager.toggleMusic();
+    }
 
 
 

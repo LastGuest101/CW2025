@@ -20,17 +20,20 @@ public class GameInputHandler {
     private final Consumer<DownData> onDownUpdate;
     private final Runnable onPauseToggle;
     private final Runnable onNewGame;
+    private final Runnable onMusicToggle;
 
     public GameInputHandler(InputEventListener eventListener,
                             Consumer<ViewData> onViewUpdate,
                             Consumer<DownData> onDownUpdate,
                             Runnable onPauseToggle,
-                            Runnable onNewGame) {
+                            Runnable onNewGame,
+                            Runnable onMusicToggle) {
         this.eventListener = eventListener;
         this.onViewUpdate = onViewUpdate;
         this.onDownUpdate = onDownUpdate;
         this.onPauseToggle = onPauseToggle;
         this.onNewGame = onNewGame;
+        this.onMusicToggle = onMusicToggle;
         initKeyActions();
     }
 
@@ -66,13 +69,17 @@ public class GameInputHandler {
     }
 
     public void handleKeyPress(KeyEvent event) {
-        // Handle Game State Controls (Pause/New Game)
+        // Handle Game State Controls (Pause/New Game/Mute)
         if (event.getCode() == KeyCode.P) {
             onPauseToggle.run();
             return;
         }
-        if (event.getCode() == KeyCode.N) {
+        else if (event.getCode() == KeyCode.N) {
             onNewGame.run();
+            return;
+        }
+        else if (event.getCode() == KeyCode.M) {
+            onMusicToggle.run();
             return;
         }
 

@@ -19,4 +19,6 @@ public interface InputEventListener {
     void onPauseEvent();
 
     void createNewGame();
+
+    void muteMusic();
 }

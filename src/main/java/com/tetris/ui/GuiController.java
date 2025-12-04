@@ -60,7 +60,8 @@ public class GuiController implements GameView, Initializable {
                 this::refreshBrick,
                 this::updateView,
                 () -> pauseGame(null),
-                () -> newGame(null)
+                () -> newGame(null),
+                () -> muteGame(null)
         );
     }
 
@@ -127,4 +128,8 @@ public class GuiController implements GameView, Initializable {
         gamePanel.requestFocus();
     }
 
+    public void muteGame(ActionEvent e) {
+        eventListener.muteMusic();
+        gamePanel.requestFocus();
+    }
 }

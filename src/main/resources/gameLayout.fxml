@@ -106,6 +106,7 @@
             <Label text="F : Time Freeze" styleClass="help-text"/>
             <Label text="P : Pause" styleClass="help-text"/>
             <Label text="N : New Game" styleClass="help-text"/>
+            <Label text="M : Mute Music" styleClass="help-text"/>
         </VBox>
         <Button text="BACK" onAction="#closeHelp" styleClass="menu-button"/>
     </VBox>

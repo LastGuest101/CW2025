@@ -9,6 +9,8 @@ import com.tetris.ui.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class GameController implements InputEventListener {
 
@@ -18,8 +20,6 @@ public class GameController implements InputEventListener {
 
     private Timeline gameLoop;
 
-    private static final double GAME_SPEED_MILLIS = 400;
-
     private final SoundManager soundManager;
 
     private boolean isFrozen = false;
@@ -28,9 +28,16 @@ public class GameController implements InputEventListener {
 
     private final static double FREEZE_DURATION = 15000;
 
+    private double gameSpeed = 1000;
+
+    private int totalLinesCleared = 0;
+
+    private final IntegerProperty currentLevel = new SimpleIntegerProperty(1);
+
     public GameController(GameView view) {
         this.gameView = view; // Assign to interface field
         this.soundManager = new SoundManager();
+        gameView.bindLevel(currentLevel);
 
         board.createNewBrick();
         gameView.setEventListener(this); // Calls are the same, but now loose coupled
@@ -40,7 +47,7 @@ public class GameController implements InputEventListener {
 
 
         this.gameLoop = new Timeline(new KeyFrame(
-                Duration.millis(GAME_SPEED_MILLIS),
+                Duration.millis(gameSpeed),
                 ae -> {
                     if (!isFrozen) {
                         DownData data = onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
@@ -95,6 +102,7 @@ public class GameController implements InputEventListener {
         if (clearRow != null && clearRow.getLinesRemoved() > 0) {
             soundManager.playClearLine();
             board.getScore().add(clearRow.getScoreBonus());
+            updateLevel(clearRow.getLinesRemoved());
         }
         if (board.createNewBrick()) {
             gameLoop.stop();
@@ -147,6 +155,9 @@ public class GameController implements InputEventListener {
         hasUsedFreeze = false;
         isFrozen = false;
         board.getScore().updateHighscore(board.getScore().scoreProperty());
+        totalLinesCleared = 0;
+        currentLevel.set(1);
+        gameSpeed = 400;
         gameLoop.stop();
         board.newGame();
         gameView.refreshGameBackground(board.getBoardMatrix());
@@ -211,6 +222,51 @@ public class GameController implements InputEventListener {
         isFrozen = false;
         // Pass data to revert colors instantly
         gameView.setFreezeStatus(false, board.getBoardMatrix(), board.getViewData());
+    }
+
+    private void updateLevel(int linesRemoved) {
+        totalLinesCleared += linesRemoved;
+
+        // Level up every 10 lines
+        int newLevelVal = (totalLinesCleared / 10) + 1;
+
+        if (newLevelVal > currentLevel.get()) {
+            currentLevel.set(newLevelVal);
+
+            // FORMULA: Speed decreases by 10% every level (0.9x)
+            // Level 1: 1000ms
+            // Level 2: 900ms
+            double newSpeed = 800 * Math.pow(0.8, newLevelVal - 1);
+
+            // Clamp it so it doesn't crash the timeline (minimum 50ms)
+            if (newSpeed < 50) newSpeed = 50;
+
+            // Check if significant change needed
+            if (Math.abs(newSpeed - gameSpeed) > 1.0) {
+                gameSpeed = newSpeed;
+                updateGameLoop();
+                System.out.println("Level: " + newLevelVal + " | Speed: " + (int)gameSpeed + "ms");
+            }
+        }
+    }
+
+    private void updateGameLoop() {
+        // We must stop the old timeline before starting a new one
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
+        // Create a new timeline with the faster Duration
+        this.gameLoop = new Timeline(new KeyFrame(
+                Duration.millis(gameSpeed),
+                ae -> {
+                    if (!isFrozen) {
+                        DownData data = onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                        gameView.updateView(data);
+                    }
+                }
+        ));
+        gameLoop.setCycleCount(Timeline.INDEFINITE);
+        gameLoop.play();
     }
 
 

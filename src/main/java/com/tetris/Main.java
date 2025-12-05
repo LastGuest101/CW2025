@@ -15,7 +15,7 @@ public class Main extends Application {
 
     private static final String APP_TITLE = "TetrisJFX";
     private static final String LAYOUT_RESOURCE = "/gameLayout.fxml"; // Use absolute path
-    private static final int WINDOW_WIDTH =850;
+    private static final int WINDOW_WIDTH = 900;
     private static final int WINDOW_HEIGHT = 700;
 
     private GameController gameController;

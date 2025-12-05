@@ -13,4 +13,5 @@ public interface GameView {
     void bindHighScore(IntegerProperty scoreProperty);
     void setEventListener(InputEventListener listener);
     void setFreezeStatus(boolean isFrozen, int[][] currentBoard, ViewData currentBrick);
+    void bindLevel(IntegerProperty levelProperty);
 }

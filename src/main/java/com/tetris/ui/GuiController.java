@@ -31,6 +31,7 @@ public class GuiController implements GameView, Initializable {
     @FXML private Pane nextBrickPane;
     @FXML private BorderPane gameBoard;
     @FXML private BorderPane rootPane;
+    @FXML private Label levelLabel;
 
     private final BoardInitiator boardInitiator = new BoardInitiator();
     private final BoardStyler boardStyler = new BoardStyler();
@@ -149,5 +150,10 @@ public class GuiController implements GameView, Initializable {
             boardRefresher.refreshBackground(currentBoard);
             boardRefresher.refreshBrick(currentBrick);
         }
+    }
+
+    @Override
+    public void bindLevel(IntegerProperty levelProperty) {
+        levelLabel.textProperty().bind(levelProperty.asString());
     }
 }

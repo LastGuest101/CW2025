@@ -14,6 +14,20 @@
 <BorderPane fx:id="rootPane" fx:controller="com.tetris.ui.GuiController"
             xmlns:fx="http://javafx.com/fxml"
             styleClass="root">
+
+    <left>
+
+        <VBox alignment="TOP_CENTER" spacing="20" styleClass="sidebar"
+            style="-fx-padding: 24 10 0 30;">
+            <Pane minHeight="50"/>
+
+            <VBox alignment="CENTER" spacing="5" styleClass="scoreBox">
+                <Label text="🚀 LEVEL" styleClass="sidebarLabel"/>
+                <Label fx:id="levelLabel" text="1" styleClass="scoreValue"/>
+            </VBox>
+        </VBox>
+    </left>
+
     <center>
         <StackPane>
             <BorderPane fx:id="gameBoard" styleClass="gameBoard" maxWidth="-Infinity" maxHeight="-Infinity">
@@ -37,14 +51,14 @@
                 <Label text="TETRIS" styleClass="gameTitle"/>
             </VBox>
 
-            <VBox alignment="CENTER" spacing="5" styleClass="highScoreBox">
-                <Label text="👑 HighScore" styleClass="sidebarLabel"/>
-                <Label fx:id="highScoreLabel" text="0" styleClass="scoreValue"/>
-            </VBox>
-
             <VBox alignment="CENTER" spacing="5" styleClass="scoreBox">
                 <Label text="🏆 SCORE" styleClass="sidebarLabel"/>
                 <Label fx:id="scoreLabel" text="0" styleClass="scoreValue"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="5" styleClass="highScoreBox">
+                <Label text="👑 HighScore" styleClass="sidebarLabel"/>
+                <Label fx:id="highScoreLabel" text="0" styleClass="scoreValue"/>
             </VBox>
 
             <VBox alignment="CENTER" spacing="5" styleClass="nextBrickBox">
@@ -54,17 +68,12 @@
 
             <VBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 0 0;">
                 <Button text="🔄 New Game" onAction="#newGame" styleClass="gameButton, actionButton"/>
-                <Button text=" Freeze" onAction="#activateFreeze" styleClass="gameButton"
-                        style="-fx-background-color: #E0FFFF; -fx-text-fill: #008B8B; -fx-border-color: #00CED1;"/>
+
                 <Button text="⏸ Pause" onAction="#pauseGame" styleClass="gameButton, secondaryButton"/>
                 <Button text="🔊 Mute" onAction="#muteGame" styleClass="gameButton, secondaryButton"/>
             </VBox>
         </VBox>
     </right>
-
-    <left>
-        <Pane prefWidth="50" />
-    </left>
 
     <stylesheets>
         <URL value="@window_style.css"/>

@@ -173,6 +173,12 @@ public class SimpleBoard implements Board {
         int ghostY = (int) currentOffset.getY();
         int[][] shape = brickRotator.getCurrentShape();
 
+        // Checks the piece is already in an invalid position (Game Over state),
+        // doesn't try to calculate a ghost. Just return the current Y.
+        if (!isMoveValid(shape, currentX, ghostY)) {
+            return ghostY;
+        }
+
         while (isMoveValid(shape, currentX, ghostY + 1)) {
             ghostY++;
         }

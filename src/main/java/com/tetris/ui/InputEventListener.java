@@ -21,4 +21,7 @@ public interface InputEventListener {
     void createNewGame();
 
     void muteMusic();
+
+    void onFreezeEvent();
 }
+

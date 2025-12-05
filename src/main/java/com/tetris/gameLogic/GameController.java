@@ -22,6 +22,12 @@ public class GameController implements InputEventListener {
 
     private final SoundManager soundManager;
 
+    private boolean isFrozen = false;
+
+    private boolean hasUsedFreeze = false;
+
+    private final static double FREEZE_DURATION = 15000;
+
     public GameController(GameView view) {
         this.gameView = view; // Assign to interface field
         this.soundManager = new SoundManager();
@@ -36,10 +42,10 @@ public class GameController implements InputEventListener {
         this.gameLoop = new Timeline(new KeyFrame(
                 Duration.millis(GAME_SPEED_MILLIS),
                 ae -> {
-                    // 2. Perform the logic
-                    DownData data = onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
-                    // 3. Push the result to the View
-                    gameView.updateView(data);
+                    if (!isFrozen) {
+                        DownData data = onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+                        gameView.updateView(data);
+                    }
                 }
         ));
         gameLoop.setCycleCount(Timeline.INDEFINITE);
@@ -82,19 +88,28 @@ public class GameController implements InputEventListener {
      */
 
     private DownData handleIntersect() {
-        soundManager.playDrop(); // Piece landed!
+        soundManager.playDrop();
         board.mergeBrickToBackground();
         ClearRow clearRow = board.clearRows();
 
         if (clearRow != null && clearRow.getLinesRemoved() > 0) {
-            soundManager.playClearLine(); // BOOM! Lines cleared
+            soundManager.playClearLine();
             board.getScore().add(clearRow.getScoreBonus());
         }
         if (board.createNewBrick()) {
             gameLoop.stop();
             gameView.gameOver();
+            return new DownData(clearRow, board.getViewData()); // Return safely
         }
+
+        // Only refresh if the game is NOT over
         gameView.refreshGameBackground(board.getBoardMatrix());
+
+        // If Frozen, re-apply the visual freeze effect to the new piece immediately
+        if (isFrozen) {
+            gameView.setFreezeStatus(true, board.getBoardMatrix(), board.getViewData());
+        }
+
         return new DownData(clearRow, board.getViewData());
     }
     /*
@@ -129,10 +144,13 @@ public class GameController implements InputEventListener {
 
     @Override
     public void createNewGame() {
+        hasUsedFreeze = false;
+        isFrozen = false;
         board.getScore().updateHighscore(board.getScore().scoreProperty());
         gameLoop.stop();
         board.newGame();
         gameView.refreshGameBackground(board.getBoardMatrix());
+        gameView.setFreezeStatus(false, board.getBoardMatrix(), board.getViewData());
         gameLoop.play();
     }
 
@@ -166,6 +184,33 @@ public class GameController implements InputEventListener {
     @Override
     public void muteMusic(){
         soundManager.toggleMusic();
+    }
+
+    @Override
+    public void onFreezeEvent() {
+        if (isFrozen || hasUsedFreeze) {
+            return;
+        }
+
+        isFrozen = true;
+        hasUsedFreeze = true;
+
+        soundManager.playFreeze();
+
+        // Visuals
+        gameView.setFreezeStatus(true, board.getBoardMatrix(), board.getViewData());
+
+        // Schedule un-freeze
+        new Timeline(new KeyFrame(
+                Duration.millis(FREEZE_DURATION),
+                ae -> unfreeze()
+        )).play();
+    }
+
+    private void unfreeze() {
+        isFrozen = false;
+        // Pass data to revert colors instantly
+        gameView.setFreezeStatus(false, board.getBoardMatrix(), board.getViewData());
     }
 
 

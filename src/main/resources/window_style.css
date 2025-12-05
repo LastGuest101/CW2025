@@ -25,7 +25,7 @@
 }
 
 /* 3. The Grid Lines (Essential for gameplay) */
-#gamePanel {
+.gamePanel {
     -fx-background-size: 21px 21px;
     /* Warm Sienna lines at low opacity */
     -fx-background-image:
@@ -173,4 +173,12 @@
     */
     -fx-effect: dropshadow(gaussian, white, 0, 0, 0, 3),
                 dropshadow(gaussian, rgba(160, 82, 45, 0.3), 5, 0.5, 2, 2);
+}
+/* FROZEN STATE OVERRIDES */
+
+/* 1. Change the main board container to look like ice */
+.frozen-board {
+
+    /* Glowing Cyan Border */
+    -fx-border-color: #00FFFF;
 }

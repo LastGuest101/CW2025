@@ -19,8 +19,23 @@ public class MatrixOperations {
             for (int j = 0; j < brick[i].length; j++) {
                 int targetX = x + i;
                 int targetY = y + j;
-                if (brick[j][i] != 0 && (checkOutOfBound(matrix, targetX, targetY) || matrix[targetY][targetX] != 0)) {
-                    return true;
+
+                // Only check valid brick parts
+                if (brick[j][i] != 0) {
+                    // Check Side Walls (Left/Right)
+                    if (targetX < 0 || targetX >= matrix[0].length) {
+                        return true;
+                    }
+                    // Check Bottom Floor
+                    if (targetY >= matrix.length) {
+                        return true;
+                    }
+                    // Check Collision with existing blocks
+                    //  check collision if we are INSIDE the board (y >= 0).
+                    // We allow 'y < 0' (the sky) so pieces can rotate at the spawn point.
+                    if (targetY >= 0 && matrix[targetY][targetX] != 0) {
+                        return true;
+                    }
                 }
             }
         }
@@ -33,11 +48,11 @@ public class MatrixOperations {
      */
 
     private static boolean checkOutOfBound(int[][] matrix, int targetX, int targetY) {
-        boolean returnValue = true;
-        if (targetX >= 0 && targetY < matrix.length && targetX < matrix[targetY].length) {
-            returnValue = false;
+        // Simple safety check for negative indexes
+        if (targetX < 0 || targetY < 0 || targetY >= matrix.length || targetX >= matrix[targetY].length) {
+            return true; // Treat "Out of Bounds" as a collision
         }
-        return returnValue;
+        return false;
     }
     /*
     Checks whether a given position (targetX, targetY) is outside the game board (the matrix).
@@ -67,8 +82,12 @@ public class MatrixOperations {
             for (int j = 0; j < brick[i].length; j++) {
                 int targetX = x + i;
                 int targetY = y + j;
-                if (brick[j][i] != 0) {
-                    copy[targetY][targetX] = brick[j][i];
+
+                // SAFETY CHECK: Only write to the board if coordinates are valid.
+                if (targetY >= 0 && targetY < copy.length && targetX >= 0 && targetX < copy[0].length) {
+                    if (brick[j][i] != 0) {
+                        copy[targetY][targetX] = brick[j][i];
+                    }
                 }
             }
         }

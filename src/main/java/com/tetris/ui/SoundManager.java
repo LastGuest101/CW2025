@@ -9,14 +9,13 @@ public class SoundManager {
 
     private MediaPlayer backgroundMusic;
     private AudioClip moveSound;
-    private AudioClip rotateSound;
     private AudioClip dropSound;
     private AudioClip clearLineSound;
+    private AudioClip freezeSound;
 
     public SoundManager() {
-        // Load sounds safely
         moveSound = loadSound("move.wav");
-        rotateSound = loadSound("rotate.wav");
+        freezeSound = loadSound("freeze.wav");
         dropSound = loadSound("drop.wav");
         clearLineSound = loadSound("clear.wav");
 
@@ -76,6 +75,10 @@ public class SoundManager {
 
     public void playClearLine() {
         if (clearLineSound != null) clearLineSound.play();
+    }
+
+    public void playFreeze(){
+        if (freezeSound != null) freezeSound.play();
     }
 
     public void toggleMusic() {

@@ -82,6 +82,10 @@ public class GameInputHandler {
             onMusicToggle.run();
             return;
         }
+        else if (event.getCode() == KeyCode.F) {
+            eventListener.onFreezeEvent();
+            return;
+        }
 
         // Handle Gameplay Controls
         Runnable action = keyActions.get(event.getCode());

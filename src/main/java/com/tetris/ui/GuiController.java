@@ -12,6 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
@@ -28,6 +29,8 @@ public class GuiController implements GameView, Initializable {
     @FXML private Label scoreLabel;
     @FXML private Label highScoreLabel;
     @FXML private Pane nextBrickPane;
+    @FXML private BorderPane gameBoard;
+    @FXML private BorderPane rootPane;
 
     private final BoardInitiator boardInitiator = new BoardInitiator();
     private final BoardStyler boardStyler = new BoardStyler();
@@ -131,5 +134,20 @@ public class GuiController implements GameView, Initializable {
     public void muteGame(ActionEvent e) {
         eventListener.muteMusic();
         gamePanel.requestFocus();
+    }
+
+    public void activateFreeze(ActionEvent e) {
+        eventListener.onFreezeEvent();
+        gamePanel.requestFocus(); // Return focus to board so arrow keys work
+    }
+
+    @Override
+    public void setFreezeStatus(boolean isFrozen, int[][] currentBoard, ViewData currentBrick) {
+        boardStyler.updateFrozenTheme(isFrozen, rootPane, gamePanel, gameBoard);
+
+        if (boardRefresher != null) {
+            boardRefresher.refreshBackground(currentBoard);
+            boardRefresher.refreshBrick(currentBrick);
+        }
     }
 }

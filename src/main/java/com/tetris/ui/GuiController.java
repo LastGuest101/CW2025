@@ -12,9 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 import java.net.URL;
@@ -33,6 +31,12 @@ public class GuiController implements GameView, Initializable {
     @FXML private BorderPane rootPane;
     @FXML private Label levelLabel;
 
+    @FXML private StackPane mainContainer;
+    @FXML private BorderPane gameRoot; // Renamed from rootPane
+    @FXML private VBox mainMenu;
+    @FXML private VBox pauseMenu;
+    @FXML private VBox helpMenu;
+
     private final BoardInitiator boardInitiator = new BoardInitiator();
     private final BoardStyler boardStyler = new BoardStyler();
     private BoardRefresher boardRefresher;
@@ -49,9 +53,9 @@ public class GuiController implements GameView, Initializable {
         GameResources.loadFonts();
         this.notificationRenderer = new NotificationRenderer(groupNotification);
 
-        gamePanel.setFocusTraversable(true);
-        gamePanel.requestFocus();
-        gamePanel.setOnKeyPressed(this::handleInput);
+        mainContainer.setFocusTraversable(true);
+        mainContainer.requestFocus();
+        mainContainer.setOnKeyPressed(this::handleInput);
 
         gameOverPanel.setVisible(false);
     }
@@ -102,15 +106,26 @@ public class GuiController implements GameView, Initializable {
     }
 
     private void handleInput(KeyEvent event) {
-        if (inputHandler != null) inputHandler.handleKeyPress(event);
+        // Allow M (Mute) even on the menu
+        if (event.getCode() == javafx.scene.input.KeyCode.M) {
+            if (inputHandler != null) inputHandler.handleKeyPress(event);
+            return;
+        }
+
+        // Only allow movement keys if the GAME is actually visible
+        if (gameRoot.isVisible()) {
+            if (inputHandler != null) inputHandler.handleKeyPress(event);
+        }
     }
 
-    public void bindScore(IntegerProperty score) {
+    public void bindScore(IntegerProperty score)
+    {
         scoreLabel.textProperty().bind(score.asString());
     }
 
-    public void bindHighScore(IntegerProperty highScore) {
-        highScoreLabel.textProperty().bind(highScore.asString());
+    public void bindHighScore(IntegerProperty highScore)
+    {
+                highScoreLabel.textProperty().bind(highScore.asString());
     }
 
     public void gameOver() {
@@ -126,12 +141,6 @@ public class GuiController implements GameView, Initializable {
         isGameOver.setValue(false);
     }
 
-    public void pauseGame(ActionEvent e) {
-        isPause.setValue(!isPause.getValue());
-        eventListener.onPauseEvent();
-        gamePanel.requestFocus();
-    }
-
     public void muteGame(ActionEvent e) {
         eventListener.muteMusic();
         gamePanel.requestFocus();
@@ -144,7 +153,7 @@ public class GuiController implements GameView, Initializable {
 
     @Override
     public void setFreezeStatus(boolean isFrozen, int[][] currentBoard, ViewData currentBrick) {
-        boardStyler.updateFrozenTheme(isFrozen, rootPane, gamePanel, gameBoard);
+        boardStyler.updateFrozenTheme(isFrozen, mainContainer, gamePanel, gameBoard);
 
         if (boardRefresher != null) {
             boardRefresher.refreshBackground(currentBoard);
@@ -155,5 +164,69 @@ public class GuiController implements GameView, Initializable {
     @Override
     public void bindLevel(IntegerProperty levelProperty) {
         levelLabel.textProperty().bind(levelProperty.asString());
+    }
+    // 1. Start Game
+    public void startNewGameFromMenu(ActionEvent e) {
+        mainMenu.setVisible(false);
+        gameRoot.setVisible(true);
+        newGame(null); // Call your existing newGame logic
+        gamePanel.requestFocus(); // Critical for keyboard input
+    }
+
+    public void showMainMenu(ActionEvent e) {
+        // 1. Force the game to pause logic if it's currently running
+        if (!isPause.getValue()) {
+            // We manually set the boolean and notify the listener to stop the loop
+            isPause.setValue(true);
+            if (eventListener != null) {
+                eventListener.onPauseEvent();
+            }
+        }
+
+        // 2. Switch UI Layers
+        gameRoot.setVisible(false);   // Hide the Game Board
+        pauseMenu.setVisible(false);  // Hide the Pause Menu (if open)
+        helpMenu.setVisible(false);   // Hide Help
+
+        mainMenu.setVisible(true);    // SHOW the Main Menu
+    }
+
+    // 3. Pause Toggle override
+    public void pauseGame(ActionEvent e) {
+        // 1. Toggle the Boolean Logic (Original Code)
+        boolean newState = !isPause.getValue();
+        isPause.setValue(newState);
+        eventListener.onPauseEvent(); // Tell GameController to stop/start the loop
+
+        // 2. Toggle the Menu UI (New Code)
+        if (newState) {
+            // Game is now PAUSED -> Show Menu
+            if (pauseMenu != null) {
+                pauseMenu.setVisible(true);
+                pauseMenu.toFront();
+            }
+        } else {
+            // Game is now RUNNING -> Hide Menu
+            if (pauseMenu != null) {
+                pauseMenu.setVisible(false);
+            }
+            gamePanel.requestFocus(); // Give focus back to board so keys work
+        }
+    }
+
+    // 4. Help Menu
+    public void showHelp(ActionEvent e) {
+        mainMenu.setVisible(false);
+        helpMenu.setVisible(true);
+    }
+
+    public void closeHelp(ActionEvent e) {
+        helpMenu.setVisible(false);
+        mainMenu.setVisible(true);
+    }
+
+    // 5. Exit
+    public void exitGame(ActionEvent e) {
+        System.exit(0);
     }
 }

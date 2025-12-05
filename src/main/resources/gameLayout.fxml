@@ -4,6 +4,9 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
@@ -11,71 +14,103 @@
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 
-<BorderPane fx:id="rootPane" fx:controller="com.tetris.ui.GuiController"
-            xmlns:fx="http://javafx.com/fxml"
-            styleClass="root">
+<StackPane fx:id="mainContainer" fx:controller="com.tetris.ui.GuiController"
+           xmlns:fx="http://javafx.com/fxml"
+           styleClass="root">
 
-    <left>
-
-        <VBox alignment="TOP_CENTER" spacing="20" styleClass="sidebar"
-            style="-fx-padding: 24 10 0 30;">
-            <Pane minHeight="50"/>
-
-            <VBox alignment="CENTER" spacing="5" styleClass="scoreBox">
-                <Label text="🚀 LEVEL" styleClass="sidebarLabel"/>
-                <Label fx:id="levelLabel" text="1" styleClass="scoreValue"/>
+    <BorderPane fx:id="gameRoot" visible="false">
+        <left>
+            <VBox alignment="TOP_CENTER" spacing="20" styleClass="sidebar" style="-fx-padding: 24 10 0 30;">
+                <Pane minHeight="50"/>
+                <VBox alignment="CENTER" spacing="5" styleClass="highScoreBox">
+                    <Label text="👑 HighScore" styleClass="sidebarLabel"/>
+                    <Label fx:id="highScoreLabel" text="0" styleClass="scoreValue"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="5" styleClass="scoreBox">
+                    <Label text="🚀 LEVEL" styleClass="sidebarLabel"/>
+                    <Label fx:id="levelLabel" text="1" styleClass="scoreValue"/>
+                </VBox>
             </VBox>
+        </left>
+
+        <center>
+            <StackPane>
+                <BorderPane fx:id="gameBoard" styleClass="gameBoard" maxWidth="-Infinity" maxHeight="-Infinity">
+                    <center>
+                        <GridPane fx:id="gamePanel" hgap="1" vgap="1"/>
+                    </center>
+                </BorderPane>
+                <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
+                <Group fx:id="groupNotification">
+                    <GameOverPanel fx:id="gameOverPanel"/>
+                </Group>
+            </StackPane>
+        </center>
+
+        <right>
+            <VBox alignment="TOP_CENTER" spacing="20" styleClass="sidebar">
+                <VBox alignment="CENTER" spacing="-5">
+                    <Label text="TETRIS" styleClass="gameTitle"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="5" styleClass="scoreBox">
+                    <Label text="🏆 SCORE" styleClass="sidebarLabel"/>
+                    <Label fx:id="scoreLabel" text="0" styleClass="scoreValue"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="5" styleClass="nextBrickBox">
+                    <Label text="NEXT" styleClass="sidebarLabel"/>
+                    <Pane fx:id="nextBrickPane" prefWidth="300" prefHeight="80"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 0 0;">
+                    <Button text="⏸ Pause" onAction="#pauseGame" styleClass="gameButton, secondaryButton"/>
+                    <Button text= "❄ Freeze" onAction="#activateFreeze" styleClass="gameButton" style="-fx-background-color: #E0FFFF; -fx-text-fill: #008B8B; -fx-border-color: #00CED1;"/>
+                    <Button text="🔊 Mute" onAction="#muteGame" styleClass="gameButton, secondaryButton"/>
+                    <Button text="New Game" onAction="#showMainMenu" styleClass="gameButton, secondaryButton"/>
+                </VBox>
+            </VBox>
+        </right>
+    </BorderPane>
+
+    <VBox fx:id="mainMenu" alignment="CENTER" spacing="25" styleClass="menu-overlay">
+
+        <ImageView fitWidth="300" preserveRatio="true">
+            <image>
+                <Image url="@images/logo.png"/>
+            </image>
+            <effect>
+                <DropShadow color="rgba(0,0,0,0.3)" radius="10" spread="0.2"/>
+            </effect>
+        </ImageView>
+
+        <Label text="JAVA EDITION" styleClass="menu-subtitle"/>
+
+        <VBox alignment="CENTER" spacing="15">
+            <Button text="▶ PLAY" onAction="#startNewGameFromMenu" styleClass="menu-button-primary"/>
+            <Button text="❓ CONTROLS" onAction="#showHelp" styleClass="menu-button"/>
+            <Button text="❌ EXIT" onAction="#exitGame" styleClass="menu-button"/>
         </VBox>
-    </left>
+    </VBox>
 
-    <center>
-        <StackPane>
-            <BorderPane fx:id="gameBoard" styleClass="gameBoard" maxWidth="-Infinity" maxHeight="-Infinity">
-                <center>
-                    <GridPane fx:id="gamePanel" hgap="1" vgap="1"/>
-                </center>
-            </BorderPane>
+    <VBox fx:id="pauseMenu" alignment="CENTER" spacing="20" visible="false" styleClass="menu-overlay-dark">
+        <Label text="PAUSED" styleClass="menu-title"/>
+        <Button text="▶ RESUME" onAction="#pauseGame" styleClass="menu-button-primary"/>
+        <Button text="🏠 QUIT TO TITLE" onAction="#showMainMenu" styleClass="menu-button"/>
+    </VBox>
 
-            <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
-
-            <Group fx:id="groupNotification">
-                <GameOverPanel fx:id="gameOverPanel"/>
-            </Group>
-        </StackPane>
-    </center>
-
-    <right>
-        <VBox alignment="TOP_CENTER" spacing="20" styleClass="sidebar">
-
-            <VBox alignment="CENTER" spacing="-5">
-                <Label text="TETRIS" styleClass="gameTitle"/>
-            </VBox>
-
-            <VBox alignment="CENTER" spacing="5" styleClass="scoreBox">
-                <Label text="🏆 SCORE" styleClass="sidebarLabel"/>
-                <Label fx:id="scoreLabel" text="0" styleClass="scoreValue"/>
-            </VBox>
-
-            <VBox alignment="CENTER" spacing="5" styleClass="highScoreBox">
-                <Label text="👑 HighScore" styleClass="sidebarLabel"/>
-                <Label fx:id="highScoreLabel" text="0" styleClass="scoreValue"/>
-            </VBox>
-
-            <VBox alignment="CENTER" spacing="5" styleClass="nextBrickBox">
-                <Label text="NEXT" styleClass="sidebarLabel"/>
-                <Pane fx:id="nextBrickPane" prefWidth="300" prefHeight="80"/>
-            </VBox>
-
-            <VBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 0 0;">
-                <Button text="🔄 New Game" onAction="#newGame" styleClass="gameButton, actionButton"/>
-
-                <Button text="⏸ Pause" onAction="#pauseGame" styleClass="gameButton, secondaryButton"/>
-                <Button text="🔊 Mute" onAction="#muteGame" styleClass="gameButton, secondaryButton"/>
-            </VBox>
+    <VBox fx:id="helpMenu" alignment="CENTER" spacing="20" visible="false" styleClass="menu-overlay">
+        <Label text="CONTROLS" styleClass="menu-title"/>
+        <VBox spacing="10" alignment="CENTER" styleClass="help-box">
+            <Label text="↑ (W) : Rotate" styleClass="help-text"/>
+            <Label text="(A) ← / → (D) : Move Left/Right" styleClass="help-text"/>
+            <Label text="↓ (S): Soft Drop" styleClass="help-text"/>
+            <Label text="SPACE : Hard Drop" styleClass="help-text"/>
+            <Label text="F : Time Freeze" styleClass="help-text"/>
+            <Label text="P : Pause" styleClass="help-text"/>
+            <Label text="N : New Game" styleClass="help-text"/>
         </VBox>
-    </right>
+        <Button text="BACK" onAction="#closeHelp" styleClass="menu-button"/>
+    </VBox>
 
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>
-</BorderPane>
+</StackPane>

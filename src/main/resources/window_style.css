@@ -51,6 +51,10 @@
     -fx-border-width: 2px;
 
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+        /* Existing styles... */
+        -fx-background-color: rgba(255, 255, 255, 0.6);
+        /* Add this inner shadow to make it look recessed/carved in */
+        -fx-effect: inner-shadow(gaussian, rgba(160, 82, 45, 0.1), 10, 0, 0, 0);
 }
 
 .scoreBox, .highScoreBox {
@@ -106,27 +110,35 @@
     -fx-font-family: "Verdana", sans-serif;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-
-    /* Soft Gradient Button */
-    -fx-background-color: linear-gradient(to bottom, #FFECB3, #FFD54F);
     -fx-text-fill: #6D4C41;
 
+    /* Subtle gradient */
+    -fx-background-color: linear-gradient(to bottom, #FFECB3, #FFD54F);
     -fx-background-radius: 25px;
     -fx-border-radius: 25px;
+    -fx-border-color: #DEB887;
+    -fx-border-width: 2px;
     -fx-padding: 10px 25px;
 
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    /* Shadow for depth */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 3);
     -fx-cursor: hand;
+
+    /* Smooth transition (simulated via states) */
 }
 
 .gameButton:hover {
-    -fx-background-color: linear-gradient(to bottom, #FFF8E1, #FFECB3);
-    -fx-translate-y: -1px;
+    /* Lighter/Brighter on hover */
+    -fx-background-color: linear-gradient(to bottom, #FFF8E1, #FFE082);
+    -fx-translate-y: -2px; /* Moves up slightly */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 5); /* Bigger shadow */
 }
 
 .gameButton:pressed {
-    -fx-background-color: #FFCA28;
-    -fx-translate-y: 1px;
+    /* Darker when clicked */
+    -fx-background-color: #FFC107;
+    -fx-translate-y: 1px; /* Moves down */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1); /* Smaller shadow */
 }
 
 /* Game Over Style */
@@ -159,20 +171,17 @@
     -fx-stroke-width: 2px;
 }
 .gameTitle {
-    /* Large, bold font */
+    /* Existing font settings... */
     -fx-font-family: "Verdana", "Arial Rounded MT Bold", sans-serif;
     -fx-font-size: 40px;
-    -fx-font-weight: 900; /* Extra Bold */
-
-    /* Soft Sunset Orange (Matches Game Over text) */
+    -fx-font-weight: 900;
     -fx-text-fill: #FF7043;
 
-    /* Two shadows:
-       1. A white "glow" to help it stand out against the wheat background
-       2. A soft brown drop shadow for depth
-    */
-    -fx-effect: dropshadow(gaussian, white, 0, 0, 0, 3),
-                dropshadow(gaussian, rgba(160, 82, 45, 0.3), 5, 0.5, 2, 2);
+    /* Add a double shadow:
+       1. White glow outline
+       2. Soft drop shadow */
+    -fx-effect: dropshadow(gaussian, white, 0, 0, 0, 2),
+                dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 2, 2);
 }
 /* FROZEN STATE OVERRIDES */
 
@@ -181,4 +190,100 @@
 
     /* Glowing Cyan Border */
     -fx-border-color: #00FFFF;
+}
+
+/* --- MENU STYLES --- */
+
+/* Semi-transparent background for menus */
+.menu-overlay {
+    /* Slightly more transparent */
+    -fx-background-color: rgba(255, 248, 220, 0.85);
+    -fx-background-radius: 30;
+
+    /* White subtle border to mimic glass edge */
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-width: 2px;
+    -fx-border-radius: 30;
+
+    -fx-max-width: 500;
+    -fx-max-height: 600;
+
+    /* Deep soft shadow to lift it off the game */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 30, 0.2, 0, 10);
+}
+
+/* Darker overlay for Pause (dim the game) */
+.menu-overlay-dark {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+}
+
+.menu-title {
+    -fx-font-family: "Verdana", sans-serif;
+    -fx-font-size: 60px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #FF7043;
+    -fx-effect: dropshadow(gaussian, white, 0, 0, 0, 3);
+}
+
+.menu-subtitle {
+    -fx-font-family: "Verdana", sans-serif;
+    -fx-font-size: 20px;
+    -fx-text-fill: #8B5A2B;
+    -fx-padding: 0 0 20 0;
+}
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B5A2B;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-border-color: #8B5A2B;
+    -fx-border-width: 2px;
+    -fx-border-radius: 30;
+    -fx-min-width: 200px;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: rgba(139, 90, 43, 0.1);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.menu-button-primary {
+    -fx-background-color: linear-gradient(to right, #FF7043, #FF8A65);
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 30;
+    -fx-min-width: 200px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.menu-button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #FF8A65, #FFAB91);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.help-text {
+    -fx-font-family: "Verdana", sans-serif;
+    -fx-font-size: 16px;
+    -fx-text-fill: #5D4037;
+    -fx-font-weight: bold;
+}
+.menu-button-primary:hover {
+    /* Brighter gradient to look like it's glowing */
+    -fx-background-color: linear-gradient(to right, #FF8A65, #FFAB91);
+
+    /* Slight scale up to feel tactile */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+
+    /* Larger, softer shadow for depth */
+    -fx-effect: dropshadow(gaussian, rgba(255, 112, 67, 0.4), 15, 0.3, 0, 5);
+
+    /* Change cursor */
+    -fx-cursor: hand;
 }

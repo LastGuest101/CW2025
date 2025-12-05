@@ -199,6 +199,12 @@ public class GameController implements InputEventListener {
 
     @Override
     public void onFreezeEvent() {
+        // --- FIX: Prevent usage if game is Over, Paused, or in Menu ---
+        if (gameLoop.getStatus() != javafx.animation.Animation.Status.RUNNING) {
+            return;
+        }
+
+        // Existing checks
         if (isFrozen || hasUsedFreeze) {
             return;
         }

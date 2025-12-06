@@ -1,12 +1,11 @@
 package com.tetris.ui;
 
 import com.tetris.data.ViewData;
+import com.tetris.gameLogic.GameConfig;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 public class BoardRefresher {
-
-    private static final int BRICK_SIZE = 20;
 
     private final GridPane brickPanel;
     private final GridPane ghostPanel;
@@ -29,7 +28,7 @@ public class BoardRefresher {
     }
 
     public void refreshBrick(ViewData brick) {
-        int cellSize = BRICK_SIZE + 1;
+        int cellSize = GameConfig.BRICK_SIZE + 1;
 
         double xPos = brick.getxPosition() * cellSize;
         double yPos = (brick.getyPosition() * cellSize) - 42;

@@ -1,6 +1,7 @@
 package com.tetris.ui;
 
 import com.tetris.data.ViewData;
+import com.tetris.gameLogic.GameConfig;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
@@ -12,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardInitiator {
-
-    private static final int BRICK_SIZE = 20;
 
     public GridPane setupLayers(GridPane gamePanel, GridPane brickPanel) {
         StackPane gameArea = new StackPane();
@@ -55,7 +54,7 @@ public class BoardInitiator {
 
         for (int i = 2; i < boardMatrix.length; i++) {
             for (int j = 0; j < boardMatrix[i].length; j++) {
-                Rectangle rect = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                Rectangle rect = new Rectangle(GameConfig.BRICK_SIZE, GameConfig.BRICK_SIZE);
                 displayMatrix[i][j] = rect;
                 gamePanel.add(rect, j, i - 2);
             }
@@ -70,13 +69,13 @@ public class BoardInitiator {
         for (int i = 0; i < brick.getBrickData().length; i++) {
             for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                 // Ghost Node
-                Rectangle ghostRect = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                Rectangle ghostRect = new Rectangle(GameConfig.BRICK_SIZE, GameConfig.BRICK_SIZE);
                 ghostRect.setVisible(false);
                 ghostRects[i][j] = ghostRect;
                 ghostPanel.add(ghostRect, j, i);
 
                 // Real Brick Node
-                Rectangle brickRect = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                Rectangle brickRect = new Rectangle(GameConfig.BRICK_SIZE, GameConfig.BRICK_SIZE);
                 brickRect.setVisible(false);
                 brickRects[i][j] = brickRect;
                 brickPanel.add(brickRect, j, i);
@@ -91,7 +90,7 @@ public class BoardInitiator {
         List<Rectangle[][]> grids = new ArrayList<>();
 
         int nextCount = 3;
-        int brickWidth = 4 * BRICK_SIZE;
+        int brickWidth = 4 * GameConfig.BRICK_SIZE;
         int gap = 20;
         double startX = (nextBrickPane.getPrefWidth() - ((brickWidth * nextCount) + (gap * (nextCount - 1)))) / 2;
 
@@ -101,9 +100,9 @@ public class BoardInitiator {
 
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
-                    Rectangle rect = new Rectangle(BRICK_SIZE, BRICK_SIZE);
-                    rect.setX(brickOffsetX + (j * BRICK_SIZE));
-                    rect.setY(i * BRICK_SIZE);
+                    Rectangle rect = new Rectangle(GameConfig.BRICK_SIZE, GameConfig.BRICK_SIZE);
+                    rect.setX(brickOffsetX + (j * GameConfig.BRICK_SIZE));
+                    rect.setY(i * GameConfig.BRICK_SIZE);
                     rect.setVisible(false);
                     nextBrickPane.getChildren().add(rect);
                     grid[i][j] = rect;

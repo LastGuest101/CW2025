@@ -11,12 +11,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
+import static com.tetris.gameLogic.GameConfig.WINDOW_HEIGHT;
+import static com.tetris.gameLogic.GameConfig.WINDOW_WIDTH;
+
 public class Main extends Application {
 
     private static final String APP_TITLE = "TetrisJFX";
-    private static final String LAYOUT_RESOURCE = "/gameLayout.fxml"; // Use absolute path
-    private static final int WINDOW_WIDTH = 900;
-    private static final int WINDOW_HEIGHT = 700;
+    private static final String LAYOUT_RESOURCE = "/gameLayout.fxml"; // Use absolute path;
 
     private GameController gameController;
 

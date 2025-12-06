@@ -6,7 +6,6 @@ import com.tetris.bricks.Brick;
 import com.tetris.bricks.BrickGenerator;
 
 import java.awt.*;
-
 public class SimpleBoard implements Board {
 
     private final int width;
@@ -144,15 +143,13 @@ public class SimpleBoard implements Board {
     }
 
     @Override
-    public ClearRow clearRows() {
+    public ClearRow clearRows(int currentLevel) {
         ClearRow result = MatrixOperations.checkRemoving(currentGameMatrix);
-
         currentGameMatrix = result.getNewMatrix();
         int lines = result.getLinesRemoved();
-        int points = scoringSystem.calculateScore(lines);
-
-        return new ClearRow(lines, result.getNewMatrix(), points);
-
+        int points = scoringSystem.calculateScore(lines, currentLevel);
+        return new ClearRow(lines, result.getNewMatrix(), points,
+                result.getClearedIndices(), result.getClearedRowsData());
     }
 
     @Override
@@ -165,6 +162,7 @@ public class SimpleBoard implements Board {
     public void newGame() {
         currentGameMatrix = new int[height][width];
         score.reset();
+        scoringSystem.reset();
         createNewBrick();
     }
 

@@ -2,6 +2,7 @@ package com.tetris.ui;
 
 import com.tetris.data.DownData;
 import com.tetris.data.ViewData;
+import com.tetris.gameLogic.ClearRow;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -28,8 +30,8 @@ public class GuiController implements GameView, Initializable {
     @FXML private Label highScoreLabel;
     @FXML private Pane nextBrickPane;
     @FXML private BorderPane gameBoard;
-    @FXML private BorderPane rootPane;
     @FXML private Label levelLabel;
+    @FXML private ImageView menuLogo;
 
     @FXML private StackPane mainContainer;
     @FXML private BorderPane gameRoot; // Renamed from rootPane
@@ -47,15 +49,16 @@ public class GuiController implements GameView, Initializable {
     private InputEventListener eventListener;
     private final BooleanProperty isPause = new SimpleBooleanProperty(false);
     private final BooleanProperty isGameOver = new SimpleBooleanProperty(false);
+    private final BoardAnimator animator = new BoardAnimator();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         GameResources.loadFonts();
         this.notificationRenderer = new NotificationRenderer(groupNotification);
-
         mainContainer.setFocusTraversable(true);
         mainContainer.requestFocus();
         mainContainer.setOnKeyPressed(this::handleInput);
+        animator.startLogoPulse(menuLogo);
 
         gameOverPanel.setVisible(false);
     }
@@ -88,8 +91,21 @@ public class GuiController implements GameView, Initializable {
 
     @Override
     public void updateView(DownData downData) {
-        if (downData.getClearRow() != null) {
-            notificationRenderer.showScoreBonus(downData.getClearRow().getScoreBonus());
+        ClearRow clearRow = downData.getClearRow();
+
+        if (clearRow != null && clearRow.getLinesRemoved() > 0) {
+            notificationRenderer.showScoreBonus(clearRow.getScoreBonus());
+            animator.shake(gameRoot);
+
+            javafx.scene.layout.Pane staticLayer = (javafx.scene.layout.Pane) brickPanel.getParent();
+
+            if (staticLayer != null) {
+                animator.spawnClearParticles(
+                        staticLayer,
+                        clearRow.getClearedIndices(),
+                        clearRow.getClearedRowsData()
+                );
+            }
         }
         refreshBrick(downData.getViewData());
     }
@@ -165,7 +181,6 @@ public class GuiController implements GameView, Initializable {
     public void bindLevel(IntegerProperty levelProperty) {
         levelLabel.textProperty().bind(levelProperty.asString());
     }
-    // 1. Start Game
     public void startNewGameFromMenu(ActionEvent e) {
         mainMenu.setVisible(false);
         gameRoot.setVisible(true);
@@ -180,6 +195,7 @@ public class GuiController implements GameView, Initializable {
             isPause.setValue(true);
             if (eventListener != null) {
                 eventListener.onPauseEvent();
+                eventListener.saveHighScore();
             }
         }
 
@@ -214,7 +230,6 @@ public class GuiController implements GameView, Initializable {
         }
     }
 
-    // 4. Help Menu
     public void showHelp(ActionEvent e) {
         mainMenu.setVisible(false);
         helpMenu.setVisible(true);
@@ -225,7 +240,6 @@ public class GuiController implements GameView, Initializable {
         mainMenu.setVisible(true);
     }
 
-    // 5. Exit
     public void exitGame(ActionEvent e) {
         System.exit(0);
     }

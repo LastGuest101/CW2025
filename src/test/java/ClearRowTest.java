@@ -1,34 +1,28 @@
-import com.tetris.board.Board;
-import com.tetris.board.SimpleBoard;
 import com.tetris.gameLogic.ClearRow;
 import com.tetris.gameLogic.MatrixOperations;
 import com.tetris.gameLogic.ScoringSystem;
-import com.tetris.gameLogic.Score;
 import org.junit.jupiter.api.Test;
 
-import static com.tetris.gameLogic.MatrixOperations.checkRemoving;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ClearRowTest {
     @Test
     void noClearTest() {
-       int[][] initialMatrix = {
-               {1, 1, 1, 0},
-               {1, 1, 0, 1},
-               {1, 0, 1, 1},
-               {0, 1, 1, 1}
-       };
+        int[][] initialMatrix = {
+                {1, 1, 1, 0},
+                {1, 1, 0, 1},
+                {1, 0, 1, 1},
+                {0, 1, 1, 1}
+        };
         ClearRow clearRow = MatrixOperations.checkRemoving(initialMatrix);
         ScoringSystem ScoringSystem = new ScoringSystem();
-        int linesRemoved = clearRow.getLinesRemoved(); ;
+        int linesRemoved = clearRow.getLinesRemoved();
         int [][] newMatrix = clearRow.getNewMatrix();
-        int scoreBonus = ScoringSystem.calculateScore(linesRemoved);
+        int scoreBonus = ScoringSystem.calculateScore(linesRemoved, 1);
 
-        assertEquals(0,linesRemoved);
+        assertEquals(0, linesRemoved);
         assertArrayEquals(initialMatrix, newMatrix);
         assertEquals(0, scoreBonus);
-
-
     }
 
     @Test
@@ -48,13 +42,13 @@ class ClearRowTest {
         };
         ClearRow clearRow = MatrixOperations.checkRemoving(initialMatrix);
         ScoringSystem ScoringSystem = new ScoringSystem();
-        int linesRemoved = clearRow.getLinesRemoved(); ;
+        int linesRemoved = clearRow.getLinesRemoved();
         int [][] newMatrix = clearRow.getNewMatrix();
-        int scoreBonus = ScoringSystem.calculateScore(linesRemoved);
+        int scoreBonus = ScoringSystem.calculateScore(linesRemoved, 1);
 
-        assertEquals(1,linesRemoved);
+        assertEquals(1, linesRemoved);
         assertArrayEquals(expectedMatrix, newMatrix);
-        assertEquals(50, scoreBonus);
+        assertEquals(100, scoreBonus);
     }
 
     @Test
@@ -74,13 +68,13 @@ class ClearRowTest {
         };
         ClearRow clearRow = MatrixOperations.checkRemoving(initialMatrix);
         ScoringSystem ScoringSystem = new ScoringSystem();
-        int linesRemoved = clearRow.getLinesRemoved(); ;
+        int linesRemoved = clearRow.getLinesRemoved();
         int [][] newMatrix = clearRow.getNewMatrix();
-        int scoreBonus = ScoringSystem.calculateScore(linesRemoved);
+        int scoreBonus = ScoringSystem.calculateScore(linesRemoved, 1);
 
-        assertEquals(3,linesRemoved);
+        assertEquals(3, linesRemoved);
         assertArrayEquals(expectedMatrix, newMatrix);
-        assertEquals(450, scoreBonus);
+        assertEquals(500, scoreBonus);
     }
 
     @Test
@@ -100,13 +94,13 @@ class ClearRowTest {
         };
         ClearRow clearRow = MatrixOperations.checkRemoving(initialMatrix);
         ScoringSystem ScoringSystem = new ScoringSystem();
-        int linesRemoved = clearRow.getLinesRemoved(); ;
+        int linesRemoved = clearRow.getLinesRemoved();
         int [][] newMatrix = clearRow.getNewMatrix();
-        int scoreBonus = ScoringSystem.calculateScore(linesRemoved);
+        int scoreBonus = ScoringSystem.calculateScore(linesRemoved, 1);
 
-        assertEquals(1,linesRemoved);
+        assertEquals(1, linesRemoved);
         assertArrayEquals(expectedMatrix, newMatrix);
-        assertEquals(50, scoreBonus);
+        assertEquals(100, scoreBonus);
     }
 
     @Test
@@ -126,13 +120,13 @@ class ClearRowTest {
         };
         ClearRow clearRow = MatrixOperations.checkRemoving(initialMatrix);
         ScoringSystem ScoringSystem = new ScoringSystem();
-        int linesRemoved = clearRow.getLinesRemoved(); ;
+        int linesRemoved = clearRow.getLinesRemoved();
         int [][] newMatrix = clearRow.getNewMatrix();
-        int scoreBonus = ScoringSystem.calculateScore(linesRemoved);
+        int scoreBonus = ScoringSystem.calculateScore(linesRemoved, 1);
 
-        assertEquals(1,linesRemoved);
+        assertEquals(1, linesRemoved);
         assertArrayEquals(expectedMatrix, newMatrix);
-        assertEquals(50, scoreBonus);
+        assertEquals(100, scoreBonus);
     }
 
     @Test
@@ -153,18 +147,17 @@ class ClearRowTest {
 
         ClearRow clearRow = MatrixOperations.checkRemoving(initialMatrix);
         ScoringSystem ScoringSystem = new ScoringSystem();
-        int linesRemoved = clearRow.getLinesRemoved(); ;
+        int linesRemoved = clearRow.getLinesRemoved();
         int [][] newMatrix = clearRow.getNewMatrix();
-        int scoreBonus = ScoringSystem.calculateScore(linesRemoved);
-
+        int scoreBonus = ScoringSystem.calculateScore(linesRemoved, 1);
 
         assertEquals(2, clearRow.getLinesRemoved());
         assertArrayEquals(expectedMatrix, newMatrix);
-        assertEquals(200, scoreBonus);
+        assertEquals(300, scoreBonus);
     }
 
     @Test
-    void  fourLineTetrisTest() {
+    void fourLineTetrisTest() {
         int[][] initialMatrix = {
                 {1,1,1,1},
                 {1,1,1,1},
@@ -181,9 +174,9 @@ class ClearRowTest {
 
         ClearRow clearRow = MatrixOperations.checkRemoving(initialMatrix);
         ScoringSystem ScoringSystem = new ScoringSystem();
-        int linesRemoved = clearRow.getLinesRemoved(); ;
+        int linesRemoved = clearRow.getLinesRemoved();
         int [][] newMatrix = clearRow.getNewMatrix();
-        int scoreBonus = ScoringSystem.calculateScore(linesRemoved);
+        int scoreBonus = ScoringSystem.calculateScore(linesRemoved, 1);
 
         assertEquals(4, clearRow.getLinesRemoved());
         assertArrayEquals(expectedMatrix, newMatrix);

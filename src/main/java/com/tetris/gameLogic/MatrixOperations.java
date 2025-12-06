@@ -102,7 +102,8 @@ public class MatrixOperations {
     public static ClearRow checkRemoving(final int[][] matrix) {
         int[][] tmp = new int[matrix.length][matrix[0].length];
         Deque<int[]> newRows = new ArrayDeque<>();
-        List<Integer> clearedRows = new ArrayList<>();
+        List<Integer> clearedRowsIndices = new ArrayList<>();
+        List<int[]> clearedRowsData = new ArrayList<>(); // NEW LIST
 
         for (int i = 0; i < matrix.length; i++) {
             int[] tmpRow = new int[matrix[i].length];
@@ -114,14 +115,11 @@ public class MatrixOperations {
                 tmpRow[j] = matrix[i][j];
             }
             if (rowToClear) {
-                clearedRows.add(i);
+                clearedRowsIndices.add(i);
+                clearedRowsData.add(tmpRow); // CAPTURE THE COLOR DATA
             } else {
                 newRows.add(tmpRow);
             }
-            /*
-            Gets a copy of the current row being checked initialised as full unless zero value is
-            found on its row and is added to clear and new rows respectivly.
-             */
         }
         for (int i = matrix.length - 1; i >= 0; i--) {
             int[] row = newRows.pollLast();
@@ -131,12 +129,8 @@ public class MatrixOperations {
                 break;
             }
         }
-        /*
-        Places all non-full rows into the new temporary board from bottom to top,
-        starting with the last row in newRows and moving upward.
-        Empty rows remain at the top of tmp.
-         */
-        return new ClearRow(clearedRows.size(), tmp);
+
+        return new ClearRow(clearedRowsIndices.size(), tmp, 0, clearedRowsIndices, clearedRowsData);
     }
     /*
     Used to find full rows and the number of full rows,

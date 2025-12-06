@@ -10,5 +10,8 @@ public class GameConfig {
     public static final double SPEED_MULTIPLIER = 0.8;
     public static final double MAX_SPEED_CAP = 50.0;
 
+    public static final int BOARD_WIDTH = 10;
+    public static final int BOARD_HEIGHT = 25;
+
     public static final String HIGHSCORE_FILE = "highscore.dat";
 }

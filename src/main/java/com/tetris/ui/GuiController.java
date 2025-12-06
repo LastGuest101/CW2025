@@ -207,14 +207,11 @@ public class GuiController implements GameView, Initializable {
         mainMenu.setVisible(true);    // SHOW the Main Menu
     }
 
-    // 3. Pause Toggle override
     public void pauseGame(ActionEvent e) {
-        // 1. Toggle the Boolean Logic (Original Code)
         boolean newState = !isPause.getValue();
         isPause.setValue(newState);
         eventListener.onPauseEvent(); // Tell GameController to stop/start the loop
 
-        // 2. Toggle the Menu UI (New Code)
         if (newState) {
             // Game is now PAUSED -> Show Menu
             if (pauseMenu != null) {

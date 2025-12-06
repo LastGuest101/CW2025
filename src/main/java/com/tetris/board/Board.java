@@ -22,7 +22,7 @@ public interface Board {
 
     void mergeBrickToBackground();
 
-    ClearRow clearRows();
+    ClearRow clearRows(int currentLevel);
 
     Score getScore();
 

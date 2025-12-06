@@ -64,7 +64,7 @@
                     <Button text="⏸ Pause" onAction="#pauseGame" styleClass="gameButton, secondaryButton"/>
                     <Button text= "❄ Freeze" onAction="#activateFreeze" styleClass="gameButton" style="-fx-background-color: #E0FFFF; -fx-text-fill: #008B8B; -fx-border-color: #00CED1;"/>
                     <Button text="🔊 Mute" onAction="#muteGame" styleClass="gameButton, secondaryButton"/>
-                    <Button text="New Game" onAction="#showMainMenu" styleClass="gameButton, secondaryButton"/>
+                    <Button text="New Game" onAction="#newGame" styleClass="gameButton, secondaryButton"/>
                 </VBox>
             </VBox>
         </right>

@@ -156,7 +156,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }
 
-/* 5. Bonus Points (+100 popup) - Cute Pastel Style */
+/*  Bonus Points (+100 popup) - Cute Pastel Style */
 .bonusStyle {
     -fx-font-family: "Let's go Digital", "Verdana", sans-serif;
     -fx-font-size: 30px;

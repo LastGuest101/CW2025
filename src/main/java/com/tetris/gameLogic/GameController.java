@@ -37,6 +37,9 @@ public class GameController implements InputEventListener {
     public GameController(GameView view) {
         this.gameView = view; // Assign to interface field
         this.soundManager = new SoundManager();
+        int savedHighScore = HighScoreManager.loadHighScore();
+        // Get the saved highscore from the file
+        board.getScore().highScoreProperty().set(savedHighScore);
         gameView.bindLevel(currentLevel);
 
         board.createNewBrick();
@@ -86,8 +89,6 @@ public class GameController implements InputEventListener {
     private void handleSuccessfulMoveDown(MoveEvent event) {
         if (event.getEventSource() == EventSource.USER) {
             board.getScore().add(1);
-            board.getScore().updateHighscore(board.getScore().scoreProperty());
-            // Optional: soundManager.playMove(); (might be too noisy for drops)
         }
     }
     /*
@@ -97,7 +98,7 @@ public class GameController implements InputEventListener {
     private DownData handleIntersect() {
         soundManager.playDrop();
         board.mergeBrickToBackground();
-        ClearRow clearRow = board.clearRows();
+        ClearRow clearRow = board.clearRows(currentLevel.get());
 
         if (clearRow != null && clearRow.getLinesRemoved() > 0) {
             soundManager.playClearLine();
@@ -107,9 +108,15 @@ public class GameController implements InputEventListener {
         if (board.createNewBrick()) {
             gameLoop.stop();
             gameView.gameOver();
+            int currentScore = board.getScore().scoreProperty().get();
+            int currentHighScore = board.getScore().highScoreProperty().get();
+
+            //  If we beat (or tied) the record, save it to disk!
+            if (currentScore >= currentHighScore) {
+                saveHighScore();
+            }
             return new DownData(clearRow, board.getViewData()); // Return safely
         }
-
         // Only refresh if the game is NOT over
         gameView.refreshGameBackground(board.getBoardMatrix());
 
@@ -154,7 +161,6 @@ public class GameController implements InputEventListener {
     public void createNewGame() {
         hasUsedFreeze = false;
         isFrozen = false;
-        board.getScore().updateHighscore(board.getScore().scoreProperty());
         totalLinesCleared = 0;
         currentLevel.set(1);
         gameSpeed = 400;
@@ -166,6 +172,8 @@ public class GameController implements InputEventListener {
     }
 
     public void stopGame() {
+        saveHighScore();
+
         if (gameView != null) {
             stopTimeLine();
         }
@@ -214,7 +222,6 @@ public class GameController implements InputEventListener {
 
         soundManager.playFreeze();
 
-        // Visuals
         gameView.setFreezeStatus(true, board.getBoardMatrix(), board.getViewData());
 
         // Schedule un-freeze
@@ -275,6 +282,15 @@ public class GameController implements InputEventListener {
         gameLoop.play();
     }
 
+    @Override
+    public void saveHighScore() {
+        int currentScore = board.getScore().scoreProperty().get();
+        int currentHigh = board.getScore().highScoreProperty().get();
 
+        // Save if we beat or tied the record
+        if (currentScore >= currentHigh) {
+            HighScoreManager.saveHighScore(currentScore);
+        }
+    }
 
 }

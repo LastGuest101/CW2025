@@ -23,5 +23,7 @@ public interface InputEventListener {
     void muteMusic();
 
     void onFreezeEvent();
+
+    void saveHighScore();
 }
 

@@ -16,8 +16,8 @@ GitHub Repository: <https://github.com/LastGuest101/CW2025>
 3. [Implemented but Not Working Properly](#implemented-but-not-working-properly)
 4. [Features Not Implemented](#-features-not-implemented)
 5. [New Java Classes](#-new-java-classes)
-6. [Modified Java Classes](#-modified-java-classes)
-7. [Unexpected Problems](#️-unexpected-problems-and-solutions)
+6. [Modified Java Classes](#modified-java-classes)
+7. [Unexpected Problems](#unexpected-problems-and-solutions)
 
 ---
 
@@ -702,6 +702,8 @@ Added comprehensive unit tests:
 - Tests clear scoring (1–4 rows)
 - Tests level multipliers
 - Verifies score never goes negative
+
+## implemented-but-not-working-properly
 
 ## 🚧 Features Not Implemented
 

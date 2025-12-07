@@ -9,7 +9,21 @@ import com.tetris.ui.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-
+/**
+ * The central controller for the Tetris game application.
+ * <p>
+ * This class implements the Model-View-Controller (MVC) pattern by acting as the
+ * intermediary between the {@link Board} (Model) and the {@link GameView} (View).
+ * It is responsible for:
+ * <ul>
+ * <li>Managing the main game loop (JavaFX Timeline).</li>
+ * <li>Processing user inputs (keyboard events).</li>
+ * <li>Coordinating game states (Pause, Freeze, Game Over).</li>
+ * <li>Updating the score, levels, and playing sounds.</li>
+ * </ul>
+ *
+ * @author Jacob Villegas
+ */
 public class GameController implements InputEventListener {
 
     private final Board board = new SimpleBoard(GameConfig.BOARD_WIDTH, GameConfig.BOARD_HEIGHT, new RandomBrickGenerator());
@@ -21,6 +35,14 @@ public class GameController implements InputEventListener {
 
     private Timeline gameLoop;
 
+    /**
+     * Constructs a new GameController and initializes the game environment.
+     * <p>
+     * This sets up the UI bindings for scores and levels, loads high scores,
+     * initializes the starting board state, and starts the background music.
+     *
+     * @param view The UI view responsible for rendering the game.
+     */
     public GameController(GameView view) {
         this.gameView = view;
         this.soundManager = new SoundManager();
@@ -43,6 +65,14 @@ public class GameController implements InputEventListener {
         soundManager.playMusic();
     }
 
+    /**
+     * Creates the main game loop using a JavaFX Timeline.
+     * <p>
+     * The loop triggers on every tick (determined by the current level speed).
+     * If the game is not currently "Frozen", it forces a Move Down event.
+     *
+     * @return A configured {@link Timeline} object.
+     */
     private Timeline createGameLoop() {
         Timeline timeline = new Timeline(new KeyFrame(
                 Duration.millis(levelManager.getGameSpeed()),
@@ -57,6 +87,11 @@ public class GameController implements InputEventListener {
         return timeline;
     }
 
+    /**
+     * Recreates and restarts the game loop to apply new speed settings.
+     * <p>
+     * This is called whenever the player levels up to make the game faster.
+     */
     private void updateGameLoop() {
         if (gameLoop != null) {
             gameLoop.stop();
@@ -65,6 +100,12 @@ public class GameController implements InputEventListener {
         gameLoop.play();
     }
 
+    /**
+     * Handles the "Down" action (either from gravity or user pressing Down).
+     *
+     * @param event The move event details.
+     * @return A {@link DownData} object containing the view updates.
+     */
     @Override
     public DownData onDownEvent(MoveEvent event) {
         boolean moved = board.moveBrickDown();
@@ -77,6 +118,14 @@ public class GameController implements InputEventListener {
         return handleIntersect();
     }
 
+    /**
+     * Handles the "Hard Drop" action (Spacebar).
+     * <p>
+     * Instantly drops the piece to the bottom and locks it.
+     *
+     * @param event The move event details.
+     * @return A {@link DownData} object containing the view updates (including cleared lines).
+     */
     @Override
     public DownData onSpaceEvent(MoveEvent event) {
         while (board.moveBrickDown()) {
@@ -85,23 +134,56 @@ public class GameController implements InputEventListener {
         return handleIntersect();
     }
 
+    /**
+     * Handles moving the piece to the left.
+     *
+     * @param event The move event details.
+     * @return The updated {@link ViewData}.
+     */
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
         if (board.moveBrickLeft()) soundManager.playMove();
         return board.getViewData();
     }
 
+    /**
+     * Handles moving the piece to the right.
+     *
+     * @param event The move event details.
+     * @return The updated {@link ViewData}.
+     */
     @Override
     public ViewData onRightEvent(MoveEvent event) {
         if (board.moveBrickRight()) soundManager.playMove();
         return board.getViewData();
     }
 
+    /**
+     * Handles rotating the piece.
+     *
+     * @param event The move event details.
+     * @return The updated {@link ViewData}.
+     */
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
         if (board.rotateLeftBrick()) soundManager.playRotate();
         return board.getViewData();
     }
+
+    /**
+     * Processes logic when a brick hits the bottom or another piece.
+     * <p>
+     * This method:
+     * <ol>
+     * <li>Plays the drop sound.</li>
+     * <li>Merges the brick into the board matrix.</li>
+     * <li>Checks for and processes cleared lines.</li>
+     * <li>Checks for Game Over conditions.</li>
+     * <li>Refreshes the view.</li>
+     * </ol>
+     *
+     * @return The data required to update the UI (cleared lines, score, etc).
+     */
 
     private DownData handleIntersect() {
         soundManager.playDrop();
@@ -123,6 +205,11 @@ public class GameController implements InputEventListener {
         return new DownData(clearRow, board.getViewData());
     }
 
+    /**
+     * Updates the score and level based on the number of cleared lines.
+     *
+     * @param clearRow The result of the row clearing check.
+     */
     private void processClearedLines(ClearRow clearRow) {
         if (clearRow != null && clearRow.getLinesRemoved() > 0) {
             soundManager.playClearLine();
@@ -136,6 +223,11 @@ public class GameController implements InputEventListener {
         }
     }
 
+    /**
+     * Checks if the game is over (unable to spawn a new brick).
+     *
+     * @return {@code true} if the game is over; {@code false} otherwise.
+     */
     private boolean processGameOver() {
         if (board.createNewBrick()) {
             gameLoop.stop();
@@ -146,6 +238,11 @@ public class GameController implements InputEventListener {
         return false;
     }
 
+    /**
+     * Resets the game to its initial state.
+     * <p>
+     * Clears the board, resets level/score, resets power-ups, and starts a new game loop.
+     */
     @Override
     public void createNewGame() {
         // Reset Managers
@@ -161,6 +258,11 @@ public class GameController implements InputEventListener {
         updateGameLoop();
     }
 
+    /**
+     * Attempts to activate the "Time Freeze" power-up.
+     * <p>
+     * If successful, it pauses logic updates (but keeps the loop running) and visualizes the freeze.
+     */
     @Override
     public void onFreezeEvent() {
         if (gameLoop.getStatus() != javafx.animation.Animation.Status.RUNNING) return;
@@ -177,6 +279,9 @@ public class GameController implements InputEventListener {
         }
     }
 
+    /**
+     * Toggles the game loop between Playing and Paused states.
+     */
     @Override
     public void onPauseEvent() {
         if (gameLoop.getStatus() == javafx.animation.Animation.Status.RUNNING) {
@@ -186,6 +291,11 @@ public class GameController implements InputEventListener {
         }
     }
 
+    /**
+     * Stops the game loop and saves the high score.
+     * <p>
+     * Typically called when the application window is closing.
+     */
     public void stopGame() {
         saveHighScore();
         if (gameLoop != null) {
@@ -193,6 +303,9 @@ public class GameController implements InputEventListener {
         }
     }
 
+    /**
+     * Persists the current high score to storage if the current score exceeds it.
+     */
     @Override
     public void saveHighScore() {
         int currentScore = board.getScore().scoreProperty().get();
@@ -202,6 +315,9 @@ public class GameController implements InputEventListener {
         }
     }
 
+    /**
+     * Toggles background music on or off.
+     */
     @Override
     public void muteMusic() {
         soundManager.toggleMusic();

@@ -6,6 +6,14 @@ import com.tetris.bricks.Brick;
 import com.tetris.bricks.BrickGenerator;
 
 import java.awt.*;
+/**
+ * Represents the core game logic board for Tetris.
+ * <p>
+ * This class manages the 2D grid of the game (the matrix), the active falling piece,
+ * collision detection, movement validation, scoring, and the "ghost" piece calculations.
+ * It serves as the bridge between the raw data and the GameController.
+ * @author Jacob Villegas
+ */
 public class SimpleBoard implements Board {
 
     private final int width;
@@ -19,6 +27,13 @@ public class SimpleBoard implements Board {
     private static final int SPAWN_X = 4;
     private static final int SPAWN_Y = -1;
 
+    /**
+     * Constructs a new SimpleBoard with the specified dimensions and brick generator.
+     *
+     * @param width                The width of the game board (in blocks).
+     * @param height               The height of the game board (in blocks).
+     * @param RandomBrickGenerator The source for generating new Tetris bricks.
+     */
     public SimpleBoard(int width, int height, BrickGenerator RandomBrickGenerator) {
         this.width = width;
         this.height = height;
@@ -29,8 +44,16 @@ public class SimpleBoard implements Board {
        this.scoringSystem = new ScoringSystem();
     }
 
-    /*
-     * Helper: Checks if placing the given shape at (x, y) is valid.
+    /**
+     * Helper: Checks if placing the given shape at the target coordinates is valid.
+     * <p>
+     * It checks for boundary violations (walls, floor) and collisions with
+     * existing locked blocks in the matrix.
+     *
+     * @param shape   The 2D array representation of the brick shape.
+     * @param targetX The target X coordinate (column).
+     * @param targetY The target Y coordinate (row).
+     * @return {@code true} if the move is valid (no conflict); {@code false} otherwise.
      */
     private boolean isMoveValid(int[][] shape, int targetX, int targetY) {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
@@ -38,8 +61,14 @@ public class SimpleBoard implements Board {
         return !conflict;
     }
 
-    /*
-     * Helper: Attempts to move the current shape by delta X and delta Y.
+    /**
+     * Helper: Attempts to move the current active shape by a given delta.
+     * <p>
+     * If the move is valid, the {@code currentOffset} is updated.
+     *
+     * @param dx The change in X (horizontal).
+     * @param dy The change in Y (vertical).
+     * @return {@code true} if the move was successful; {@code false} if blocked.
      */
     private boolean attemptMove(int dx, int dy) {
         Point p = new Point(currentOffset);
@@ -53,22 +82,45 @@ public class SimpleBoard implements Board {
     }
 
 
-
+    /**
+     * Moves the active brick down by one unit.
+     *
+     * @return {@code true} if the brick moved down successfully; {@code false} if it hit the bottom or another piece.
+     */
     @Override
     public boolean moveBrickDown() {
         return attemptMove(0, 1);
     }
 
+    /**
+     * Moves the active brick to the left by one unit.
+     *
+     * @return {@code true} if the move was successful; {@code false} if blocked by a wall or piece.
+     */
     @Override
     public boolean moveBrickLeft() {
         return attemptMove(-1, 0);
     }
 
+    /**
+     * Moves the active brick to the right by one unit.
+     *
+     * @return {@code true} if the move was successful; {@code false} if blocked by a wall or piece.
+     */
     @Override
     public boolean moveBrickRight() {
         return attemptMove(1, 0);
     }
 
+    /**
+     * Attempts to rotate the active brick to the left (counter-clockwise).
+     * <p>
+     * This method implements a basic "Wall Kick" system. If the rotation is blocked
+     * by a wall or an adjacent piece, it attempts to shift the piece slightly (the "kick")
+     * to find a valid position for the rotation.
+     *
+     * @return {@code true} if the rotation (with or without a kick) was successful; {@code false} if rotation is impossible.
+     */
     @Override
     public boolean rotateLeftBrick() {
         NextShapeInfo nextShape = brickRotator.getNextShape();
@@ -98,10 +150,15 @@ public class SimpleBoard implements Board {
         return false;
     }
 
-    /*
-    Checks if the block rotating block is valid.
+    /**
+     * Spawns a new brick at the top of the board.
+     * <p>
+     * Retrieves a new brick from the generator, sets it to the spawn coordinates,
+     * and checks for immediate collision (Game Over state).
+     *
+     * @return {@code true} if the new brick overlaps with existing blocks (Game Over);
+     * {@code false} if the spawn was clean.
      */
-
     @Override
     public boolean createNewBrick() {
         Brick currentBrick = brickGenerator.getBrick();
@@ -110,15 +167,22 @@ public class SimpleBoard implements Board {
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
-    /*
-    Spawns in new brick
+    /**
+     * Retrieves the current state of the game board matrix.
+     *
+     * @return A 2D integer array representing the locked blocks on the board.
      */
-
     @Override
     public int[][] getBoardMatrix() {
         return currentGameMatrix;
     }
 
+    /**
+     * Compiles all data required for the UI to render the game frame.
+     *
+     * @return A {@link ViewData} object containing the current shape, its position,
+     * the ghost piece Y-coordinate, and previews of the next 3 bricks.
+     */
     @Override
     public ViewData getViewData() {
         var nextBricks = brickGenerator.getNextBricks(3);
@@ -137,11 +201,22 @@ public class SimpleBoard implements Board {
         );
     }
 
+    /**
+     * Locks the current active brick into the background matrix.
+     * <p>
+     * This is typically called when the brick can no longer move down.
+     */
     @Override
     public void mergeBrickToBackground() {
         currentGameMatrix = MatrixOperations.merge(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
+    /**
+     * Checks for completed rows, removes them, and updates the score.
+     *
+     * @param currentLevel The current game level (affects scoring multipliers).
+     * @return A {@link ClearRow} object containing details about cleared lines, the new matrix state, and points earned.
+     */
     @Override
     public ClearRow clearRows(int currentLevel) {
         ClearRow result = MatrixOperations.checkRemoving(currentGameMatrix);
@@ -152,12 +227,21 @@ public class SimpleBoard implements Board {
                 result.getClearedIndices(), result.getClearedRowsData());
     }
 
+    /**
+     * Gets the current game score object.
+     *
+     * @return The Score object tracking points.
+     */
     @Override
     public Score getScore() {
         return score;
     }
 
-
+    /**
+     * Resets the board state for a new game.
+     * <p>
+     * Clears the matrix, resets the score and scoring system, and spawns the first brick.
+     */
     @Override
     public void newGame() {
         currentGameMatrix = new int[height][width];
@@ -166,6 +250,14 @@ public class SimpleBoard implements Board {
         createNewBrick();
     }
 
+    /**
+     * Calculates the Y-coordinate where the current piece would land if dropped instantly.
+     * <p>
+     * This is used to render the "Ghost Piece" (shadow) to help player accuracy.
+     *
+     * @return The Y-coordinate for the ghost piece.
+     * @author Jacob Villegas
+     */
     private int getGhostY() {
         int currentX = (int) currentOffset.getX();
         int ghostY = (int) currentOffset.getY();

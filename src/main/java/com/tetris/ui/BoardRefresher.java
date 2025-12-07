@@ -5,6 +5,17 @@ import com.tetris.gameLogic.GameConfig;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Updates the visual properties of the game board during the game loop.
+ * <p>
+ * While {@link BoardInitiator} creates the objects once at the start, this class
+ * is called repeatedly (potentially 60 times a second) to move the active brick,
+ * update the ghost position, and redraw the static background when lines are cleared.
+ * <p>
+ * It acts as the "Renderer" logic, translating data coordinates into screen pixel coordinates.
+ *
+ * @author Jacob Villegas
+ */
 public class BoardRefresher {
 
     private final GridPane brickPanel;
@@ -12,6 +23,14 @@ public class BoardRefresher {
     private final BoardVisuals visuals;
     private final BoardStyler styler;
 
+    /**
+     * Constructs a BoardRefresher with references to the UI components it needs to update.
+     *
+     * @param brickPanel The JavaFX container holding the active falling piece.
+     * @param ghostPanel The JavaFX container holding the ghost piece.
+     * @param visuals    The data object containing references to all the Rectangle nodes on screen.
+     * @param styler     The utility class used to apply colors and CSS to the blocks.
+     */
     public BoardRefresher(GridPane brickPanel, GridPane ghostPanel, BoardVisuals visuals, BoardStyler styler) {
         this.brickPanel = brickPanel;
         this.ghostPanel = ghostPanel;
@@ -19,6 +38,16 @@ public class BoardRefresher {
         this.styler = styler;
     }
 
+    /**
+     * Redraws the static background grid.
+     * <p>
+     * This iterates through the entire board matrix and updates the color of every
+     * block. This is typically only called when a piece lands or lines are cleared,
+     * as the background is static during normal movement.
+     * <p>
+     *
+     * @param board The 2D integer array representing the locked blocks.
+     */
     public void refreshBackground(int[][] board) {
         for (int i = 2; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -27,6 +56,15 @@ public class BoardRefresher {
         }
     }
 
+    /**
+     * Updates the position and appearance of dynamic elements (Active Brick, Ghost, Next Queue).
+     * <p>
+     * This method calculates the pixel coordinates for the active piece based on its logical
+     * (row, col) position and applies a translation to the {@code brickPanel} and {@code ghostPanel}.
+     * It also refreshes the "Next Piece" preview grids.
+     *
+     * @param brick The snapshot of the current moving data (position, shape, ghost, etc.).
+     */
     public void refreshBrick(ViewData brick) {
         int cellSize = GameConfig.BRICK_SIZE + 1;
 

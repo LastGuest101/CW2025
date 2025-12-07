@@ -5,6 +5,18 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
 
+/**
+ * Manages the loading and playback of all audio assets in the game.
+ * <p>``
+ * This class handles two types of audio:
+ * <ul>
+ * <li><b>Background Music:</b> Handled by {@link MediaPlayer} for long, looping tracks.</li>
+ * <li><b>Sound Effects:</b> Handled by {@link AudioClip} for short, low-latency sounds (moves, drops, clears) that may need to be played multiple times rapidly.</li>
+ * </ul>
+ * It provides a centralized interface to play specific sounds and toggle music state.
+ *
+ * @author Jacob Villegas
+ */
 public class SoundManager {
 
     private MediaPlayer backgroundMusic;
@@ -13,6 +25,13 @@ public class SoundManager {
     private AudioClip clearLineSound;
     private AudioClip freezeSound;
 
+    /**
+     * Constructs a new SoundManager and pre-loads all audio files.
+     * <p>
+     * Resources are loaded from the {@code /sounds/} directory in the classpath.
+     * If a file cannot be found or loaded, an error is printed to stderr, but the
+     * game continues without that specific sound.
+     */
     public SoundManager() {
         moveSound = loadSound("move.wav");
         freezeSound = loadSound("freeze.wav");

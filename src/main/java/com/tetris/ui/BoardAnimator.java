@@ -12,8 +12,29 @@ import java.util.List;
 
 import java.util.Random;
 
+/**
+ * Handles purely visual animations and special effects for the game board.
+ * <p>
+ * This class is responsible for adding "juice" or "game feel" to the UI, including:
+ * <ul>
+ * <li>Screen shake on hard drops.</li>
+ * <li>Pulsing effects for the title logo.</li>
+ * <li>Particle explosions when lines are cleared.</li>
+ * </ul>
+ * It operates on JavaFX Nodes but does not affect the game logic or state.
+ *
+ * @author Jacob Villegas
+ */
 public class BoardAnimator {
 
+    /**
+     * Applies a short, rapid horizontal shake effect to a UI element.
+     * <p>
+     * Used when a piece is "hard dropped" to give the sensation of impact.
+     * The node is translated 5px to the right and back repeatedly over 50ms.
+     *
+     * @param node The JavaFX Node (usually the main game grid) to shake.
+     */
     public void shake(Node node) {
         if (node == null) return;
 
@@ -26,19 +47,17 @@ public class BoardAnimator {
         tt.play();
     }
 
-    public void startLogoPulse(Node node) {
-        if (node == null) return;
-
-        ScaleTransition pulse = new ScaleTransition(Duration.seconds(1.5), node);
-        pulse.setFromX(1.0);
-        pulse.setFromY(1.0);
-        pulse.setToX(1.05);
-        pulse.setToY(1.05);
-        pulse.setCycleCount(ScaleTransition.INDEFINITE);
-        pulse.setAutoReverse(true);
-        pulse.play();
-    }
-
+    /**
+     * Spawns "crumbling" particle debris for cleared rows.
+     * <p>
+     * This method reads the color data of the cleared rows and spawns small squares
+     * at the exact screen coordinates where the blocks used to be. These particles
+     * then fall and fade out.
+     *
+     * @param parent     The parent Pane where particles will be added (usually the game group).
+     * @param rowIndices The logical indices of the rows being removed (0-24).
+     * @param rowData    The raw integer color codes for the blocks in those rows.
+     */
     public void spawnClearParticles(Pane parent, List<Integer> rowIndices, List<int[]> rowData) {
         if (rowIndices == null || rowData == null || rowIndices.size() != rowData.size()) return;
 
@@ -75,6 +94,16 @@ public class BoardAnimator {
         }
     }
 
+    /**
+     * Helper: Applies physics-like movement to a single particle.
+     * <p>
+     * The particle falls (gravity), spreads horizontally, rotates randomly,
+     * and fades out simultaneously. Once the animation finishes, the particle
+     * is removed from the scene graph to prevent memory leaks.
+     *
+     * @param parent The pane containing the particle.
+     * @param p      The particle rectangle to animate.
+     */
     private void animateDebris(Pane parent, Rectangle p) {
         Random rand = new Random();
 

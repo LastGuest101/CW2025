@@ -8,19 +8,57 @@ import javafx.scene.shape.StrokeType;
 
 import javafx.scene.layout.Region;
 
+/**
+ * Handles the visual styling and coloring of individual Tetris blocks and the board.
+ * <p>
+ * This class acts as the "Painter" for the game. It applies fill colors, border strokes,
+ * and effects (like Glow or Shadow) to the JavaFX {@link Rectangle} nodes.
+ * <p>
+ * It supports two distinct visual modes:
+ * <ul>
+ * <li><b>Normal Mode:</b> Bricks are colored based on their ID (Pastel/Fruit theme).</li>
+ * <li><b>Frozen Mode:</b> All bricks turn cyan/blue with a glowing ice effect (Power-up state).</li>
+ * </ul>
+ *
+ * @author Jacob Villegas
+ */
 public class BoardStyler {
 
+    /** Tracks whether the "Time Freeze" power-up is currently active. */
     private boolean isFrozen = false; // New state
 
+    /**
+     * Updates the internal frozen state flag.
+     *
+     * @param frozen {@code true} if the freeze power-up is active; {@code false} otherwise.
+     */
     public void setFrozen(boolean frozen) {
         this.isFrozen = frozen;
     }
 
+    /**
+     * Toggles the CSS classes on the main game containers to reflect the Frozen state.
+     * <p>
+     * This adds a CSS class (e.g., "frozen-board") to the root pane, allowing the
+     * stylesheet to change the background image or border colors globally.
+     *
+     * @param isFrozen  {@code true} to apply the ice theme; {@code false} to revert to normal.
+     * @param rootPane  The main window container.
+     * @param gamePanel The specific grid container.
+     * @param gameBoard The background board region.
+     */
     public void updateFrozenTheme(boolean isFrozen, Region rootPane, Region gamePanel, Region gameBoard) {
         setFrozen(isFrozen);
         toggleStyle(gameBoard, "frozen-board", isFrozen);
     }
 
+    /**
+     * Helper: Adds or removes a specific CSS class from a JavaFX node.
+     *
+     * @param node       The UI element to modify.
+     * @param styleClass The CSS class name (e.g., "frozen-board").
+     * @param active     {@code true} to add the class; {@code false} to remove it.
+     */
     private void toggleStyle(Region node, String styleClass, boolean active) {
         if (active) {
             if (!node.getStyleClass().contains(styleClass)) {
@@ -31,7 +69,22 @@ public class BoardStyler {
         }
     }
 
-
+    /**
+     * Applies the correct visual style to a single block (rectangle) in the grid.
+     * <p>
+     * This method handles:
+     * <ol>
+     * <li><b>Fill Color:</b> Determines if it should use the brick's specific ID color or the generic "Ice" color.</li>
+     * <li><b>Stroke/Border:</b> Adds a darker border for depth.</li>
+     * <li><b>Effects:</b> Adds a glowing {@link DropShadow} (Soft gray for normal, bright Cyan for frozen).</li>
+     * <li><b>Visibility:</b> Hides empty blocks (ID 0) unless they are part of the grid background lines.</li>
+     * </ol>
+     *
+     * @param rectangle    The JavaFX node to style.
+     * @param colorId      The integer ID of the brick type (0=Empty, 1=I, 2=J, etc.).
+     * @param isBackground {@code true} if this rectangle represents a locked background block;
+     * {@code false} if it is part of the falling active piece.
+     */
 
     public void styleRectangle(Rectangle rectangle, int colorId, boolean isBackground) {
         Paint baseColor;
@@ -91,6 +144,17 @@ public class BoardStyler {
         }
     }
 
+    /**
+     * Styles the "Ghost" piece (the transparent shadow showing where the block will land).
+     * <p>
+     * The ghost style also adapts to the frozen state:
+     * <ul>
+     * <li><b>Normal:</b> Gray, semi-transparent.</li>
+     * <li><b>Frozen:</b> Bright Cyan, thicker border, more opaque.</li>
+     * </ul>
+     *
+     * @param rectangle The ghost block to style.
+     */
     public void styleGhost(Rectangle rectangle) {
         if (isFrozen) {
             // FROZEN GHOST STYLE
@@ -115,6 +179,12 @@ public class BoardStyler {
         rectangle.setVisible(true);
     }
 
+    /**
+     * Maps a brick ID integer to a specific pastel color hex code.
+     *
+     * @param i The brick ID (1-7).
+     * @return The corresponding {@link Color} object.
+     */
     private Paint getFillColor(int i) {
         return switch (i) {
             case 0 -> Color.TRANSPARENT;

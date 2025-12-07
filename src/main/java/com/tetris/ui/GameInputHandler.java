@@ -10,6 +10,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * Manages user keyboard input and maps keystrokes to game actions.
+ * <p>
+ * This class abstracts the JavaFX {@link KeyEvent} logic away from the main View.
+ * It supports dual control schemes (Arrow Keys and WASD) and handles:
+ * <ul>
+ * <li>Movement (Left, Right, Soft Drop).</li>
+ * <li>Actions (Rotate, Hard Drop).</li>
+ * <li>Game State Controls (Pause, New Game, Mute, Power-ups).</li>
+ * </ul>
+ *
+ * @author Jacob Villegas
+ */
 public class GameInputHandler {
 
     private final InputEventListener eventListener;
@@ -22,6 +35,16 @@ public class GameInputHandler {
     private final Runnable onNewGame;
     private final Runnable onMusicToggle;
 
+    /**
+     * Constructs a new Input Handler with the necessary callbacks.
+     *
+     * @param eventListener The controller interface to notify when logic events occur (e.g., "Move Left requested").
+     * @param onViewUpdate  Callback to refresh the view after lateral movement or rotation.
+     * @param onDownUpdate  Callback to refresh the view after a drop action (which might clear lines).
+     * @param onPauseToggle Callback to pause/unpause the game loop.
+     * @param onNewGame     Callback to restart the game.
+     * @param onMusicToggle Callback to mute/unmute audio.
+     */
     public GameInputHandler(InputEventListener eventListener,
                             Consumer<ViewData> onViewUpdate,
                             Consumer<DownData> onDownUpdate,
@@ -37,6 +60,18 @@ public class GameInputHandler {
         initKeyActions();
     }
 
+    /**
+     * Initializes the key mappings.
+     * <p>
+     * Mappings:
+     * <ul>
+     * <li><b>Left/A:</b> Move Left</li>
+     * <li><b>Right/D:</b> Move Right</li>
+     * <li><b>Up/W:</b> Rotate</li>
+     * <li><b>Down/S:</b> Soft Drop</li>
+     * <li><b>Space:</b> Hard Drop</li>
+     * </ul>
+     */
     private void initKeyActions() {
         Runnable leftAction = () -> onViewUpdate.accept(
                 eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER))
@@ -68,6 +103,15 @@ public class GameInputHandler {
         keyActions.put(KeyCode.SPACE, spaceAction);
     }
 
+    /**
+     * Processes a raw key press event from JavaFX.
+     * <p>
+     * It first checks for global game state keys (P, N, M, F). If the key is not
+     * a global control, it looks up the key in the {@code keyActions} map to trigger
+     * gameplay movements.
+     *
+     * @param event The JavaFX KeyEvent to process.
+     */
     public void handleKeyPress(KeyEvent event) {
         // Handle Game State Controls (Pause/New Game/Mute)
         if (event.getCode() == KeyCode.P) {

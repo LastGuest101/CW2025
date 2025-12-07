@@ -1,0 +1,7 @@
+unnamed package
+com.tetris
+com.tetris.board
+com.tetris.bricks
+com.tetris.data
+com.tetris.gameLogic
+com.tetris.ui

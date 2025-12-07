@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"com.tetris"},{"l":"com.tetris.board"},{"l":"com.tetris.bricks"},{"l":"com.tetris.data"},{"l":"com.tetris.gameLogic"},{"l":"com.tetris.ui"}];updateSearchResults();

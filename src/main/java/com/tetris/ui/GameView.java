@@ -1,0 +1,17 @@
+package com.tetris.ui;
+
+import com.tetris.data.DownData;
+import com.tetris.data.ViewData;
+import javafx.beans.property.IntegerProperty;
+
+public interface GameView {
+    void initGameView(int[][] boardMatrix, ViewData brick);
+    void refreshGameBackground(int[][] board);
+    void updateView(DownData data);
+    void gameOver();
+    void bindScore(IntegerProperty scoreProperty);
+    void bindHighScore(IntegerProperty scoreProperty);
+    void setEventListener(InputEventListener listener);
+    void setFreezeStatus(boolean isFrozen, int[][] currentBoard, ViewData currentBrick);
+    void bindLevel(IntegerProperty levelProperty);
+}

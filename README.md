@@ -1,117 +1,222 @@
 # Tetris Game Coursework
 
-> A polished, modern Tetris clone built with JavaFX. Features a custom "Time Freeze" mechanic, and a cozy, pastel aesthetic inspired by Suika Game.🍉
-> 
-GitHub Repository: https://github.com/LastGuest101/CW2025
+A polished, modern Tetris clone built with **JavaFX**, featuring:
 
+- A custom **“Time Freeze”** mechanic
+- A cozy, pastel aesthetic inspired by **Suika Game** 🍉
 
-## 🛠️ Compilation & Installation
+GitHub Repository: <https://github.com/LastGuest101/CW2025>
 
-### 1. Prerequisites (Crucial Step)
-Before running the game, you **must** ensure you have the correct Java Development Kit (JDK) installed.
+---
 
-* **Java Version:** This project requires **JDK 23** or higher.
-* **Maven:** You do **not** need to install Maven manually (the project includes a wrapper), but if you do, use version 3.8+.
+## 🛠️ Requirements
 
-**How to verify your Java version:**
-Open your terminal (Command Prompt/Terminal) and type:
+Before running the game, ensure you have the correct tools installed.
+
+- **Java:** **JDK 23** or higher
+- **Maven:** Not required globally (project uses Maven Wrapper), but if installed, use **3.8+**
+
+### ✅ Check your Java version
+
+Open a terminal (Command Prompt / PowerShell / Terminal) and run:
+
 ```sh
-
 java -version
 ```
-If the output says version "23..." (or higher), you are ready.
 
-If it says version "1.8", 17, or 21, the game will not compile. Please download and install JDK 23 from Oracle or Adoptium.
+If the output starts with `23` (or higher), you are good to go.
 
-Option 1: Running via Command Line (Recommended)
-This method uses the bundled Maven Wrapper (mvnw), which automatically downloads the correct dependencies.
+If it shows `1.8`, `17`, `21`, or anything below `23`, the game will not compile.  
+Download and install **JDK 23** from:
 
-Open your terminal (Command Prompt, PowerShell, or Terminal).
+- [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)
+- [Adoptium Temurin](https://adoptium.net/)
 
-Clone the repository:
+---
+
+## 🚀 Running the Game
+
+You can run the game either from the **command line** (recommended) or via **IntelliJ IDEA**.
+
+---
+
+### Option 1: Command Line (Recommended)
+
+This uses the bundled **Maven Wrapper** (`mvnw` / `mvnw.cmd`), which automatically downloads dependencies.
+
+1. **Clone the repository**
 
 ```sh
-
 git clone https://github.com/LastGuest101/CW2025
-```
-Navigate to the project folder:
-```sh
 cd CW2025
 ```
-(Note: Ensure you are in the folder containing mvnw and pom.xml)
 
-Run the Game:
+Make sure you are in the folder that contains `mvnw` and `pom.xml`.
 
-Windows:
+2. **Run the game**
 
-DOS
+#### On Windows
+
 ```sh
 mvnw.cmd clean javafx:run
 ```
-Mac / Linux:
+
+#### On macOS / Linux
 
 ```sh
 chmod +x mvnw
 ./mvnw clean javafx:run
 ```
-(The first run may take a minute to download dependencies.)
 
-Option 2: Running in IntelliJ IDEA
-The easiest way to run the project is by importing it directly from GitHub.
+> Note: The first run may take a minute while Maven downloads dependencies.
 
-Clone from Version Control:
+---
 
-Open IntelliJ IDEA.
+### Option 2: Running in IntelliJ IDEA
 
-On the Welcome screen, click "Get from VCS" (or go to File > New > Project from Version Control).
+1. **Clone from Version Control**
 
-Paste your repository 
-```sh
-URL: https://github.com/LastGuest101/CW2025
+- Open **IntelliJ IDEA**
+- On the Welcome screen, click **“Get from VCS”**  
+  (or go to **File > New > Project from Version Control**)
+- Use this URL:
+
+```text
+https://github.com/LastGuest101/CW2025
 ```
-Click Clone.
 
-Configure JDK 23:
+- Click **Clone**
 
-Go to File > Project Structure... (or press Ctrl+Alt+Shift+S).
+2. **Configure JDK 23**
 
-Click on Project in the left sidebar.
+- Go to **File > Project Structure…** (or press `Ctrl+Alt+Shift+S`)
+- Select **Project** in the left sidebar
+- Set:
+  - **Project SDK:** `23` (e.g. _"23 Oracle OpenJDK"_)
+  - **Project language level:** `23 – String templates...`
+- If JDK 23 is missing:
+  - Click the SDK dropdown → **Add SDK** → **Download JDK**
+  - Choose **Version 23**
+- Click **Apply** and **OK**
 
-SDK: Ensure it is set to 23 (e.g., "23 Oracle OpenJDK").
+3. **Sync Maven**
 
-If 23 is missing: Click the dropdown -> Add SDK -> Download JDK -> Select Version 23.
+- Open the **Maven** tool window (right sidebar)
+- Click **Reload All Maven Projects** (the spinning arrows icon)
+- Wait until indexing and syncing complete
 
-Language Level: Ensure it is set to 23 - String templates....
+4. **Run the game**
 
-Click Apply and OK.
+- Navigate to:  
+  `src/main/java/com/tetris/Main.java`
+- Click the green **Run (▶)** button next to the `Main` class
 
-Sync Maven:
+---
 
-Look for the Maven tab on the right sidebar.
+## 🛠️ Troubleshooting Issues
 
-Click the Reload All Maven Projects button (spinning arrows icon).
+### ⚠️ `mvnw.cmd` fails with a JAVA_HOME error
 
-Wait for the indexing bar at the bottom right to finish.
+If you see something like:
 
-Run:
+```text
+Error: JAVA_HOME is set to an invalid directory.
+JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-17.0.14.7-hotspot\"
+Please set the JAVA_HOME variable in your environment to match the
+location of your Java installation.
+```
 
-Navigate to src/main/java/com/tetris/Main.java.
+follow these steps.
 
-Click the green Run (▶) button next to the class declaration.
+#### 1. Find your installed JDK (23 or higher)
 
-Building an Executable (Optional)
-If you want to build a standalone JAR file to share:
+1. Open **PowerShell**.
+2. Run:
 
-Run the package command:
+   ```ps1
+   where.exe java
+   ```
 
-Windows: mvnw.cmd package
+3. Look for a path like:
 
-Mac/Linux: ./mvnw package
+   ```text
+   C:\Program Files\Java\jdk-23\bin\java.exe
+   ```
 
-Find the JAR:
+4. Your JDK home is everything **before** `\bin\java.exe`, e.g.:
 
-Go to the newly created target folder.
+   ```text
+   C:\Program Files\Java\jdk-23
+   ```
 
-You will see a file named something like CW2025-1.0-SNAPSHOT.jar.
+#### 2. Fix `JAVA_HOME` in Environment Variables
 
-Run it using: java -jar target/CW2025-1.0-SNAPSHOT.jar
+1. Press **Start** → type **Environment Variables** → open  
+   **“Edit the system environment variables”** → click **Environment Variables…**
+2. In **User variables for \<your-user\>**:
+   - If `JAVA_HOME` exists: **Edit** it and set **Value** to your JDK path, e.g.  
+     `C:\Program Files\Java\jdk-23`
+   - If it doesn’t exist: click **New…** and create:
+     - **Name:** `JAVA_HOME`
+     - **Value:** `C:\Program Files\Java\jdk-23`
+3. In **System variables**:
+   - Find `JAVA_HOME` (often pointing to an old JDK like `...jdk-17...`).
+   - Either **Edit** it to the same JDK path (e.g. `C:\Program Files\Java\jdk-23`)  
+     or **Delete** it if you only want to use the user variable.
+4. Still in **User variables**, edit **Path**:
+
+   - Click **Edit…** → **New** → add:
+
+     ```text
+     %JAVA_HOME%\bin
+     ```
+
+5. Click **OK** on all dialogs.
+
+#### 3. Restart the terminal and retry
+
+1. Close all PowerShell/terminal windows.
+2. Open a **new** PowerShell.
+3. Verify:
+
+   ```ps1
+   echo $env:JAVA_HOME
+   java -version
+   ```
+
+   You should see your JDK path (e.g. `C:\Program Files\Java\jdk-23`) and Java version 23+.
+
+4. Run the game again from the project folder:
+
+   ```ps1
+   cd "C:\Users\olive\CW2025"
+   .\mvnw.cmd clean javafx:run
+   ```
+
+### 📦 Dependencies
+
+All dependencies are defined in `pom.xml` and are downloaded automatically by Maven/Maven Wrapper.
+
+#### Runtime dependencies
+
+- `org.openjfx:javafx-controls:21.0.6`  
+  Used for JavaFX UI controls such as buttons, labels, panes, and the main game window.
+
+- `org.openjfx:javafx-fxml:21.0.6`  
+  Used to load and work with `.fxml` layout files (e.g. `gameLayout.fxml`) for defining the UI structure.
+
+#### Test dependencies
+
+- `org.junit.jupiter:junit-jupiter-api:5.12.1`  
+  JUnit 5 testing API (annotations like `@Test`, assertions, etc.) used to write unit tests.
+
+- `org.junit.jupiter:junit-jupiter-engine:5.12.1`  
+  JUnit 5 test engine that actually runs the tests when you execute `mvn test` or use the IDE test runner.
+
+#### Build plugins (tools used during build)
+
+- `org.apache.maven.plugins:maven-compiler-plugin:3.13.0`  
+  Configures Java compilation; here it compiles the code with Java **23** (source/target 23).
+
+- `org.openjfx:javafx-maven-plugin:0.0.8`  
+  Maven plugin that makes it easy to run the JavaFX app with `mvn javafx:run` and build JavaFX runtime images.

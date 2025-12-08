@@ -14,6 +14,21 @@ import java.net.URL;
 import static com.tetris.gameLogic.GameConfig.WINDOW_HEIGHT;
 import static com.tetris.gameLogic.GameConfig.WINDOW_WIDTH;
 
+/**
+ * The entry point for the Tetris JavaFX application.
+ * <p>
+ * This class extends {@link Application} and is responsible for the initial bootstrap of the game.
+ * Its primary duties are:
+ * <ul>
+ * <li>Loading the graphical layout from the FXML file.</li>
+ * <li>Instantiating the {@link GuiController} (View) and linking it to the {@link GameController} (Logic).</li>
+ * <li>Configuring the main {@link Stage} (window) settings, such as title and dimensions.</li>
+ * <li>Managing the application lifecycle, ensuring the game loop stops cleanly when the window closes.</li>
+ * </ul>
+ *
+ * @author Jacob Villegas
+ */
+
 public class Main extends Application {
 
     private static final String APP_TITLE = "TetrisJFX";

@@ -27,7 +27,6 @@ class BrickGeneratorTest {
         generator = new RandomBrickGenerator();
     }
 
-    // ========== Basic Functionality Tests ==========
 
     @Test
     void testGetBrickReturnsNonNull() {

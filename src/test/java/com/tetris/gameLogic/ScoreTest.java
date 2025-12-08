@@ -1,8 +1,15 @@
 package com.tetris.gameLogic;
-import com.tetris.gameLogic.Score;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the {@link Score} class to ensure correct point tracking.
+ * <p>
+ * This class verifies the maths and state operations of the scoring system:
+
+ *
+ * @author Jacob Villegas
+ */
 class ScoreTest {
     @Test
     void initialiseScoreTest() {

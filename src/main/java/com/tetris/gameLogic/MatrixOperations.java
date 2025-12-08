@@ -6,22 +6,21 @@ import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/**
+ * A utility class containing static methods for 2D array manipulations used in Tetris.
+ * <p>
+ * This class handles the low-level logic for:
+ * <ul>
+ * <li>Collision detection (intersection)</li>
+ * <li>Matrix copying (deep copies to prevent reference issues)</li>
+ * <li>Merging active bricks into the background grid</li>
+ * <li>Detecting and clearing full rows</li>
+ * </ul>
+ * This class is designed to be stateless; it does not hold game data but operates on data passed to it.
+ *
+ */
 public class MatrixOperations {
-
-
-    /**
-     * A utility class containing static methods for 2D array manipulations used in Tetris.
-     * <p>
-     * This class handles the low-level logic for:
-     * <ul>
-     * <li>Collision detection (intersection)</li>
-     * <li>Matrix copying (deep copies to prevent reference issues)</li>
-     * <li>Merging active bricks into the background grid</li>
-     * <li>Detecting and clearing full rows</li>
-     * </ul>
-     * This class is designed to be stateless; it does not hold game data but operates on data passed to it.
-     *
-     */
 
     /**
      * Private constructor to prevent instantiation.

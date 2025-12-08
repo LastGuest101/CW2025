@@ -1,6 +1,4 @@
 package com.tetris.gameLogic;
-import com.tetris.gameLogic.ClearRow;
-import com.tetris.gameLogic.MatrixOperations;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -4,6 +4,11 @@ import com.tetris.data.DownData;
 import com.tetris.data.ViewData;
 import com.tetris.gameLogic.MoveEvent;
 
+/**
+ * Defines the contract for processing user input events.
+ * <p>
+ * @author Jacob Villegas
+ */
 public interface InputEventListener {
 
     DownData onDownEvent(MoveEvent event);

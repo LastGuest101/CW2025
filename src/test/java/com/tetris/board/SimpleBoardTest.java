@@ -96,8 +96,6 @@ class SimpleBoardTest {
         board.createNewBrick();
     }
 
-    // ========== Initial State Tests ==========
-
     @Test
     void testInitialBoardEmpty() {
         board = new SimpleBoard(10, 20, mockGenerator);

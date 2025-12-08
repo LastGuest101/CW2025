@@ -2,6 +2,11 @@ package com.tetris.data;
 
 import com.tetris.gameLogic.ClearRow;
 
+/**
+ * A container object representing the result of a "Move Down" operation.
+ * <p>
+ * @author Jacob Villegas
+ */
 public final class DownData {
     private final ClearRow clearRow;
     private final ViewData viewData;

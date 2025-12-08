@@ -4,7 +4,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import org.junit.jupiter.api.Test;
-
+/**
+ * Test suite for verifying the structural integrity and rotation data of all Tetris brick types.
+ * <p>
+ * This class contains unit tests for each concrete implementation of the {@link Brick} interface
+ * (I, J, L, O, S, T, Z).
+ *
+ * @author Jacob Villegas
+ */
 class BricksTest {
     @Test
     void ObrickTest() {

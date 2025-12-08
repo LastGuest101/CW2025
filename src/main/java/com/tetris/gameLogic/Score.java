@@ -2,8 +2,6 @@ package com.tetris.gameLogic;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 /**
  * Manages the player's current score and high score tracking.

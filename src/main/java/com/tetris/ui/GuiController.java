@@ -11,11 +11,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Reflection;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -42,10 +39,9 @@ public class GuiController implements GameView, Initializable {
     @FXML private Pane nextBrickPane;
     @FXML private BorderPane gameBoard;
     @FXML private Label levelLabel;
-    @FXML private ImageView menuLogo;
 
     @FXML private StackPane mainContainer;
-    @FXML private BorderPane gameRoot; // Renamed from rootPane
+    @FXML private BorderPane gameRoot;
     @FXML private VBox mainMenu;
     @FXML private VBox pauseMenu;
     @FXML private VBox helpMenu;

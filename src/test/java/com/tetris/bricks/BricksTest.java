@@ -1,12 +1,9 @@
-
-import com.tetris.bricks.*;
-
-import org.junit.jupiter.api.Test;
+package com.tetris.bricks;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 class BricksTest {
     @Test

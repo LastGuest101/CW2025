@@ -1,17 +1,29 @@
-import com.tetris.board.SimpleBoard;
-import com.tetris.bricks.*;
-import com.tetris.data.ViewData;
-import com.tetris.gameLogic.ClearRow;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+package com.tetris.board;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.tetris.bricks.Brick;
+import com.tetris.bricks.BrickGenerator;
+import com.tetris.bricks.IBrick;
+import com.tetris.bricks.JBrick;
+import com.tetris.bricks.LBrick;
+import com.tetris.bricks.OBrick;
+import com.tetris.bricks.SBrick;
+import com.tetris.bricks.TBrick;
+import com.tetris.bricks.ZBrick;
+import com.tetris.data.ViewData;
+import com.tetris.gameLogic.ClearRow;
 
 /**
  * Unit tests for the SimpleBoard class.

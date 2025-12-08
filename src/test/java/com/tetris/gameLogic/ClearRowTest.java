@@ -1,9 +1,7 @@
-import com.tetris.gameLogic.ClearRow;
-import com.tetris.gameLogic.MatrixOperations;
-import com.tetris.gameLogic.ScoringSystem;
+package com.tetris.gameLogic;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ClearRowTest {
     @Test

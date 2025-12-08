@@ -1,5 +1,5 @@
-import com.tetris.gameLogic.GameConfig;
-import com.tetris.gameLogic.LevelManager;
+package com.tetris.gameLogic;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

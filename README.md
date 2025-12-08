@@ -46,7 +46,7 @@ Download and install **JDK 23** from:
 
 ---
 
-## 🚀 Running the Game
+## Running the Game
 
 You can run the game either from the **command line** (recommended) or via **IntelliJ IDEA**.
 
@@ -125,9 +125,9 @@ https://github.com/LastGuest101/CW2025
 
 ---
 
-## 🛠️ Troubleshooting Issues
+## Troubleshooting Issues
 
-### ⚠️ `mvnw.cmd` fails with a JAVA_HOME error
+### `mvnw.cmd` fails with a JAVA_HOME error
 
 If you see something like:
 
@@ -205,7 +205,7 @@ follow these steps.
    .\mvnw.cmd clean javafx:run
    ```
 
-### 📦 Dependencies
+### Dependencies
 
 All dependencies are defined in `pom.xml` and are downloaded automatically by Maven/Maven Wrapper.
 
@@ -233,7 +233,7 @@ All dependencies are defined in `pom.xml` and are downloaded automatically by Ma
 - `org.openjfx:javafx-maven-plugin:0.0.8`  
   Maven plugin that makes it easy to run the JavaFX app with `mvn javafx:run` and build JavaFX runtime images.
 
-  ## 📁 Project Packages
+## Project Packages
 
 The project is organised into packages under `com.tetris`:
 
@@ -260,11 +260,11 @@ The project is organised into packages under `com.tetris`:
 - `src/test/java`  
   Unit tests for bricks, row-clearing, scoring, and other game logic.
 
-## 🧾 Version Control Practices
+## Version Control Practices
 
 This project is managed with **Git** and hosted on **GitHub**. The repository uses a simple branching strategy to separate new features from cleanup and improvements.
 
-### 🔀 Branches
+### Branches
 
 - **`features`**  
   Main branch for implementing new gameplay and UI functionality. New mechanics (like Time Freeze), visual changes, sound integration, and other major additions were first built and tested here.
@@ -285,7 +285,7 @@ This project is managed with **Git** and hosted on **GitHub**. The repository us
 - **`refactoring2`**  
   Created midway through the project to perform a second round of refactoring on newer features. This allowed more aggressive restructuring (e.g. splitting classes, improving package structure, reducing duplication) while keeping the `features` branch stable.
 
-### 🧩 Commit Structure
+### Commit Structure
 
 Commits were created in two layers of detail:
 
@@ -305,7 +305,7 @@ After the initial feature commit, smaller commits documented and refined specifi
 
 This approach keeps the history readable: you can see what major feature was added in one commit, then inspect later commits for precise details of how the implementation was improved or refactored.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 CW2025/
@@ -323,15 +323,28 @@ CW2025/
 │   │       ├── window_style.css             # Styling & theme
 │   │       ├── images/                      # Visual assets (logo, etc.)
 │   │       └── sounds/                      # Audio files (SFX, music)
-│   └── test/java/
-│       ├── BricksTest.java                  # Brick rotation tests
-│       ├── ClearRowTest.java                # Row clearing tests
-│       └── ScoreTest.java                   # Scoring system tests
+│   └── test/
+│        java/com/tetris/
+│        ├── board/
+│        │   └── SimpleBoardTest.java       # Board logic tests (51 tests)
+│        │
+│        ├── bricks/
+│        │   ├── BrickGeneratorTest.java    # 7-bag system tests (27 tests)
+│        │   └── BricksTest.java            # Brick shape tests
+│        │
+│        └── gameLogic/
+│            ├── ClearRowTest.java          # Row clearing tests
+│            ├── FreezeManagerTest.java     # Freeze mechanic tests
+│            ├── LevelManagerTest.java      # Level progression tests
+│            ├── MatrixOperationsTest.java  # Matrix utility tests
+│            ├── ScoreTest.java             # Scoring tests
+│
+│
 ├── pom.xml                                  # Maven dependencies
 └── README.md                                # Documentation
 ```
 
-## 🎮 Controls
+## Controls
 
 ### Gameplay Controls
 
@@ -356,7 +369,7 @@ CW2025/
 
 ### Features Added
 
-#### 1. **Time Freeze Mechanic** ❄️
+#### 1. **Time Freeze Mechanic**
 
 **Implementation:**
 
@@ -375,27 +388,13 @@ CW2025/
   - After expiry, `onFreezeEnd` callback executes to resume normal gameplay
   - On new game, `FreezeManager.reset()` re-enables the ability
 
-- **UI feedback** (`GameInputHandler`, `BoardAnimator`, `NotificationPanel`):
-
-  - `F` key calls `FreezeManager.tryActivate()`
-  - Returns `false` if already used or currently active (no effect)
-  - Visual indicator shows freeze is active (color overlay/effect on board)
-  - Sound effect plays on successful activation (`SoundManager`)
-
 - **Configuration** (`GameConfig`):
   - `FREEZE_DURATION` – how many milliseconds freeze lasts (e.g. 3000ms = 3 seconds)
   - No cooldown system: ability is **single-use per game**
 
-**Why it works:**
-
-- Adds strategic depth: players must choose the optimal moment to use their one freeze
-- Single-use design prevents abuse and increases tension
-- Clear visual/audio feedback makes mechanic intuitive
-- Timeline-based implementation ensures accurate duration without blocking game thread
-
 ---
 
-#### 2. **Level Progression System** 📈
+#### 2. **Level Progression System**
 
 **Implementation:**
 
@@ -412,9 +411,6 @@ CW2025/
     - Level increments
     - Drop speed increases (brick falls faster)
     - Notification sent to UI
-
-- **UI display** (`GuiController`):
-  - Level label updated in real-time
 
 **Speed progression calculation**:
 
@@ -434,15 +430,9 @@ CW2025/
   Level 10+: 100ms (max difficulty)
   ```
 
-**Why it works:**
-
-- Provides long-term challenge and replayability
-- Smooth difficulty curve keeps game engaging
-- Clear feedback motivates players to reach higher levels
-
 ---
 
-#### 3. **High Score** 🏆
+#### 3. **High Score**
 
 **Implementation:**
 
@@ -452,25 +442,13 @@ CW2025/
   - `loadHighScore()` – reads saved score on game start
   - Uses Java's `FileWriter`/`BufferedReader` for simple text-based storage
 
-- **Integration points**:
-
-  - `GameController.endGame()` checks if current score > high score
-  - If yes, calls `HighScoreManager.saveHighScore(currentScore)`
-  - `Main.start()` loads high score and displays it in UI
-
 - **UI display** (`GuiController`):
   - "High Score: XXXX" label always visible
   - Updates immediately when new record set.
 
-**Why it works:**
-
-- Persistent motivation across play sessions
-- Simple file format makes it easy to debug/reset
-- Immediate feedback when beating personal best
-
 ---
 
-#### 4. **Sound System & Audio Feedback** 🔊
+#### 4. **Sound System & Audio Feedback**
 
 **Implementation:**
 
@@ -498,15 +476,9 @@ CW2025/
   - When muted, `playSound()` methods return immediately without playing
   - Mute state persisted in memory (resets on restart)
 
-**Why it works:**
-
-- Audio cues make game more engaging and tactile
-- Feedback confirms player actions
-- Mute option respects player preference
-
 ---
 
-#### 5. **Visual Animations & Styling** 🎨
+#### 5. **Visual Animations & Styling**
 
 **Implementation:**
 
@@ -514,20 +486,9 @@ CW2025/
 
 - **Row clear animation**:
 
-  - When rows cleared, "crumbling" particle debris spawns from the cleared blocks
-  - Uses `spawnClearParticles()` method which creates 4 small shards per block
-  - Creates satisfying "explosion" effect that enhances game feel
-
 - **Hard drop shake effect**:
 
-  - `shake(Node)` method translates the board 5px horizontally
-  - Cycles 4 times (2 shakes) over 50ms with auto-reverse
-  - Creates impactful feedback for line clears
-
 - **Freeze effect**:
-  - When Time Freeze active, board cells get blue tint overlay
-  - Opacity pulses to indicate "frozen" state
-  - Removed when freeze expires
 
 ##### b) **Custom Styling** (`BoardStyler`, `window_style.css`)
 
@@ -541,12 +502,6 @@ CW2025/
   T-brick: #E0BBE4 (lavender)
   Z-brick: #FFC9DE (rose)
   ```
-
-**Why it works:**
-
-- Visual feedback makes gameplay clearer and more satisfying
-- Consistent aesthetic creates polished, professional feel
-- Centralized resources make it easy to swap themes
 
 ---
 
@@ -582,11 +537,6 @@ CW2025/
   - If no rows cleared, combo automatically resets
   - Score displayed in real-time via `GuiController`
 
-**Why it works:**
-
-- **Rewards aggressive play**: Combo system incentivises clearing lines consistently rather than just surviving
-- **Scales with difficulty**: Level multiplier means high-level clears are exponentially more valuable
-
 #### 7. **Configuration Management** ⚙️
 
 **Implementation:**
@@ -595,13 +545,7 @@ CW2025/
 - All classes reference `GameConfig` instead of hardcoded values
 - Makes game easy to tune and balance
 
-**Why it works:**
-
-- Single source of truth for all game parameters
-- Easy to experiment with different values
-- Documentation: constants have clear names
-
-#### 8. **Ghost Brick Preview** 👻
+#### 8. **Ghost Brick Preview**
 
 **Implementation:**
 
@@ -618,35 +562,11 @@ CW2025/
   - Ghost Y-position stored in `ViewData` and passed to UI layer
 
 - **Visual styling** (`BoardStyler.styleGhost()`):
-
-  - Uses same brick colors as active piece
-  - Applies reduced opacity (0.3-0.4)
-  - Dashed stroke outline for clarity
-  - `Rectangle.setVisible(false)` for empty cells in 4×4 matrix
-
 - **Update mechanism** (`BoardRefresher.refreshBrick()`):
-
-  - Translates `ghostPanel` to ghost Y-position: `(ghostYPos * cellSize) - 42`
-  - X-position always matches active brick
-  - Automatically updates when player:
-    - Moves left/right
-    - Rotates brick
-    - Soft drops (↓)
-
-- **Performance optimization**:
-  - Ghost calculation only runs when brick position/rotation changes
-  - Result cached in `ViewData` to avoid recalculating every frame
-  - Separate `ghostPanel` layer means no redrawing of background
-
-**Why it works:**
-
-- **Improves gameplay**: Players see exactly where brick will land
-- **Reduces mistakes**: Eliminates guesswork, especially at high speeds
-- **Layer-based rendering**: Clean separation prevents visual artifacts (no flickering)
 
 ---
 
-#### 9. **Next Shape Preview** 🔮
+#### 9. **Next Shape Preview**
 
 **Implementation:**
 
@@ -657,59 +577,106 @@ CW2025/
   - `getShape()` returns defensive copy via `MatrixOperations.copy()`
 
 - **Preview UI** (`gameLayout.fxml`, `GuiController`):
-
-  - Dedicated `nextBrickPane` in FXML (right side of game board)
-  - `BoardInitiator.initBoard()` creates up to **3 preview grids**
-  - Each preview is a 4×4 `GridPane` filled with `Rectangle` nodes
-  - Stored in `BoardVisuals.nextBrickGrids` list
-
 - **Integration points**:
-  - `GameController` generates queue via `RandomBrickGenerator`
-  - `ViewData` carries `int[][][]` (array of 3 brick matrices)
-  - `BoardRefresher` automatically updates all previews every frame
-  - No manual `updateNextShape()` calls needed (data-driven)
-
-**Why it works:**
-
-- **Strategic depth**: Players plan 2-3 moves ahead
-- **Reduces frustration**: Seeing upcoming pieces allows setup moves
-- **Multiple previews**: Advanced players can optimize sequences
-- **Efficient rendering**: Previews share same refresh cycle as main board
-- **Immutable data**: `NextShapeInfo` prevents accidental mutation bugs
 
 ---
 
-### 10. 🧪 Testing
+### 10. Testing
 
-Added comprehensive unit tests:
+#### **`SimpleBoardTest.java`**`
 
-#### `BricksTest.java`
+**Core Board Logic:**
+
+**Rotation System:**
+
+**Advanced Features:**
+
+**Edge Cases:**
+
+---
+
+#### **`BrickGeneratorTest.java`**
+
+**7-Bag Randomization System:**
+
+**Drought Prevention:**
+
+**Preview System:**'
+
+**Integration:**
+
+---
+
+#### **`BricksTest.java`**
 
 - Verifies all 7 brick types have correct initial shapes
 - Tests rotation: each brick rotates correctly (some have 2 states, some 4)
 - Checks bounds: bricks stay within valid matrix dimensions
+- Shape matrix immutability (defensive copies)
 
-#### `ClearRowTest.java`
+---
 
-- Tests single row clear
-- Tests multiple simultaneous row clears (2, 3, 4 rows)
-- Verifies board shifts down correctly after clear
+#### **`ClearRowTest.java`**
+
+- Single row clear
+- Multiple simultaneous row clears (2, 3, 4 rows)
+- Board shifts down correctly after clear
 - Edge cases: clearing top row, bottom row, non-contiguous rows
+- Cleared row data capture (for particle animations)
+- Empty rows added at top after clear
 
-#### `ScoreTest.java`
+---
 
-- Tests placement scoring
-- Tests clear scoring (1–4 rows)
-- Tests level multipliers
-- Verifies score never goes negative
+#### **`ScoreTest.java`**
+
+- Initial score is 0
+- Adding single score values
+- Adding multiple scores (cumulative)
+- Score reset functionality
+- Score never goes negative
+- JavaFX property binding updates
+
+---
+
+#### **`MatrixOperationsTest.java`**
+
+**Collision Detection (`intersect`):**
+
+**Matrix Manipulation:**
+
+**Row Clearing Logic:**
+
+---
+
+#### **`LevelManagerTest.java`**
+
+**Level Progression:**
+
+**Speed Calculation:**
+
+**Edge Cases:**
+
+---
+
+#### **`FreezeManagerTest.java`**
+
+**Activation:**
+
+**One-Time Use:**
+
+**Duration:**
+
+**Reset:**
+
+---
 
 ## implemented-but-not-working-properly
 
-## 🚧 Features Not Implemented
+## Features Not Implemented
 
 While the core game is fully functional, several advanced features were considered but not implemented due to time and scope constraints.
 
-### 1. **Multiplayer / 2-Player Mode** 👥
+### 1. **Multiplayer / 2-Player Mode**
 
 **What it would include:**
 
@@ -735,7 +702,7 @@ While the core game is fully functional, several advanced features were consider
 
 ---
 
-### 2. **Per-User High Score Tracking** 📊
+### 2. **Per-User High Score Tracking**
 
 **What it would include:**
 
@@ -757,7 +724,7 @@ While the core game is fully functional, several advanced features were consider
 
 ---
 
-### 3. **Advanced Animations** ✨
+### 3. **Advanced Animations**
 
 **What could be added:**
 
@@ -787,7 +754,7 @@ While the core game is fully functional, several advanced features were consider
 
 ---
 
-### 4. **Alternative Game Modes** 🎮
+### 4. **Alternative Game Modes**
 
 **Potential modes:**
 
@@ -812,7 +779,7 @@ While the core game is fully functional, several advanced features were consider
 
 ---
 
-### 5. **Dynamic Visual Themes Per Level** 🎨
+### 5. **Dynamic Visual Themes Per Level**
 
 **What it would include:**
 
@@ -836,7 +803,7 @@ While the core game is fully functional, several advanced features were consider
 
 ---
 
-### 6. **Additional Power-Ups** ⚡
+### 6. **Additional Power-Ups**
 
 **Potential power-ups:**
 
@@ -866,34 +833,7 @@ While the core game is fully functional, several advanced features were consider
 
 ---
 
-### 7. **Mobile Touch Controls** 📱
-
-**What it would include:**
-
-- On-screen buttons for move/rotate/drop
-- Swipe gestures (swipe down = hard drop, swipe left/right = move)
-- Tap-to-rotate mechanic
-- Responsive layout scaling for phone/tablet screens
-
-**Why not implemented:**
-
-- **Platform mismatch**: JavaFX primarily desktop-focused
-  - Mobile deployment requires other frameworks out of scope.
-  - Touch events differ significantly from keyboard input
-- **Input redesign**: `GameInputHandler` built around `KeyEvent`
-  - Would need parallel touch event system
-  - Gesture recognition library or custom implementation
-- **Screen space**: Mobile screens too small for 10×20 grid + UI elements
-  - Would require portrait orientation and heavily simplified UI
-- **Out of scope**: Project targets desktop JavaFX application
-
-**Current platform:**
-
-- Desktop only (Windows/macOS/Linux) with keyboard controls
-
----
-
-### 8. **Customizable Key Bindings** ⌨️
+### 7. **Customizable Key Bindings**
 
 **What it would include:**
 
@@ -919,7 +859,7 @@ While the core game is fully functional, several advanced features were consider
 
 ---
 
-### 9. **Tutorial / First-Time User Experience** 📖
+### 8. **Tutorial / First-Time User Experience**
 
 **What it would include:**
 
@@ -945,7 +885,7 @@ While the core game is fully functional, several advanced features were consider
 
 ---
 
-## 📝 New Java Classes
+## New Java Classes
 
 The following classes were created for this assignment. Classes are organized by package and purpose.
 
@@ -1044,7 +984,6 @@ The following classes were created for this assignment. Classes are organized by
 - **Key methods:**
   - `refreshBrick(ViewData)` - Redraws all layers (background, ghost, active brick)
   - `updateNextPreviews(int[][][])` - Updates next brick preview grids
-- **Called:** Every frame (60 FPS) by GuiController
 - **Why created:** Encapsulates all rendering logic; optimizes by only redrawing changed cells
 
 #### 11. **`BoardAnimator.java`**
@@ -1109,40 +1048,6 @@ The following classes were created for this assignment. Classes are organized by
 - **Why created:** Reduces code duplication; all standard bricks inherit common rotation logic
 
 ---
-
-### Test Classes (`src/test/java`)
-
-#### 17. **`BricksTest.java`**
-
-- **Purpose:** Unit tests for all brick types
-- **Tests:**
-  - Initial shapes are correct (4×4 matrices)
-  - Rotation works for all brick types
-  - Bricks stay within valid bounds
-- **Framework:** JUnit 5 (`@Test`, `assertEquals`)
-
-#### 18. **`ClearRowTest.java`**
-
-- **Purpose:** Unit tests for row clearing logic
-- **Tests:**
-  - Single row clear
-  - Multiple simultaneous row clears (2, 3, 4 lines)
-  - Board shifts down correctly after clear
-  - Edge cases: top row, bottom row, non-contiguous rows
-
-#### 19. **`ScoreTest.java`**
-
-- **Purpose:** Unit tests for scoring calculations
-- **Tests:**
-  - Base score for line clears (1–4 lines)
-  - Level multipliers apply correctly
-  - Combo system increments and resets properly
-  - Score never goes negative
-
----
-
-**Design principle applied:** Each new class follows
-**Single Responsibility Principle** - does one thing well and has a clear, descriptive name.
 
 ## Modified Java Classes
 
@@ -1213,14 +1118,6 @@ The following classes from the original codebase were modified to support new fe
 
 - **Modified `clearRows()` signature:**
 
-  ```java
-  // Original
-  ClearRow clearRows();
-
-  // New
-  ClearRow clearRows(int currentLevel);
-  ```
-
   - Now accepts level parameter to calculate score bonuses with level multipliers
 
 **Why Modified:**
@@ -1239,31 +1136,9 @@ The following classes from the original codebase were modified to support new fe
 
 - **Constructor now accepts `BrickGenerator`:**
 
-  ```java
-  // Original
-  public SimpleBoard(int width, int height) {
-      this.brickGenerator = new RandomBrickGenerator();
-      // ...
-  }
-
-  // New
-  public SimpleBoard(int width, int height, BrickGenerator generator) {
-      this.brickGenerator = generator;
-      // ...
-  }
-  ```
-
   - Dependency injection allows testing with mock generators
 
 - **Changed initial brick spawn position:**
-
-  ```java
-  // Original
-  currentOffset = new Point(4, 10);  // Spawned mid-screen
-
-  // New
-  currentOffset = new Point(4, 1);   // Spawns at top
-  ```
 
   - Fixes visual bug where pieces appeared from middle of board
 
@@ -1321,20 +1196,6 @@ The following classes from the original codebase were modified to support new fe
 
 - **Added fields for animation data:**
 
-  ```java
-  // Original
-  private final int linesRemoved;
-  private final int[][] newMatrix;
-  private final int scoreBonus;
-
-  // New
-  private final int linesRemoved;
-  private final int[][] newMatrix;
-  private final int scoreBonus;
-  private final List<Integer> clearedIndices;      // NEW
-  private final List<int[]> clearedRowsData;       // NEW
-  ```
-
 - **Added secondary constructor for tests:**
 - **Added getter methods:**
   - `getClearedIndices()` - Returns row indices (e.g., [18, 19, 20])
@@ -1356,21 +1217,6 @@ The following classes from the original codebase were modified to support new fe
 **Changes:**
 
 - **Added ghost position field:**
-
-  ```java
-  // Original
-  private final int[][] brickData;
-  private final int xPosition;
-  private final int yPosition;
-  private final int[][] nextBrickData;
-
-  // New
-  private final int[][] brickData;
-  private final int xPosition;
-  private final int yPosition;
-  private final int ghostYPosition;        // NEW
-  private final int[][][] nextBricksData;  // Changed from int[][]
-  ```
 
 - **Changed `nextBrickData` to array:**
 
@@ -1421,13 +1267,6 @@ The following classes from the original codebase were modified to support new fe
 - `bindHighScore()` - Binds high score label
 - `setFreezeStatus()` - Updates freeze visual theme
 
-**Removed code:**
-
-- ~200 lines of direct JavaFX Rectangle manipulation
-- Manual Timeline creation (moved to `GameController`)
-- Hardcoded color switch statement (moved to `BoardStyler`)
-- Direct keyboard `KeyEvent` handling (moved to `GameInputHandler`)
-
 **Why Modified:**
 
 - Original was 400+ lines doing everything (God Object antipattern)
@@ -1437,143 +1276,7 @@ The following classes from the original codebase were modified to support new fe
 
 ---
 
-#### 8. **`GameOverPanel.java`**
-
-**Original Location:** `Tetris/GameOverPanel.java`  
-**New Location:** `com.tetris.ui/GameOverPanel.java`
-
-**Changes:**
-
-- **Package change only:** `Tetris` → `com.tetris.ui`
-- **No logic changes:** Still extends `BorderPane` with centered "GAME OVER" label
-
-**Why Modified:**
-
-- Package reorganization for consistency
-- Grouped with other UI components
-
----
-
-#### 9. **`NotificationPanel.java`**
-
-**Changes:**
-
-- **Original class deleted**
-- **Functionality moved to `NotificationRenderer.java`**
-
-**Why Modified:**
-
-- Original mixed UI structure (extending `BorderPane`) with animation logic (`showScore()`)
-- New design separates concerns:
-  - `NotificationRenderer` - Animation/timing logic
-  - JavaFX `Label` - Simple text node (no custom panel)
-- More flexible: can show different notification types without subclassing
-
----
-
 ### Data Objects
-
-#### 10. **`DownData.java`**
-
-**Original Location:** `Tetris/DownData.java`  
-**New Location:** `com.tetris.data/DownData.java`
-
-**Changes:**
-
-- **Package change only:** `Tetris` → `com.tetris.data`
-- **No structural changes:** Still immutable record with `ClearRow` and `ViewData`
-
-**Why Modified:**
-
-- Package reorganization
-- Grouped with other data transfer objects
-
----
-
-#### 11. **`NextShapeInfo.java`**
-
-**Original Location:** `Tetris/NextShapeInfo.java`  
-**New Location:** `com.tetris.gameLogic/NextShapeInfo.java`
-
-**Changes:**
-
-- **Package change only:** `Tetris` → `com.tetris.gameLogic`
-- **No logic changes:** Still stores shape matrix and rotation index
-
-**Why Modified:**
-
-- Moved to `gameLogic` package (more accurate semantic location)
-- Used by `BrickRotator` for rotation calculations
-
----
-
-#### 12. **`MoveEvent.java`**
-
-**Original Location:** `Tetris/MoveEvent.java`  
-**New Location:** `com.tetris.gameLogic/MoveEvent.java`
-
-**Changes:**
-
-- **Package change only:** `Tetris` → `com.tetris.gameLogic`
-- **No structural changes:** Still immutable with `EventType` and `EventSource`
-
-**Why Modified:**
-
-- Package reorganization
-- Logically belongs with game logic (movement processing)
-
----
-
-#### 13. **`EventType.java`**
-
-**Original Location:** `Tetris/EventType.java`  
-**New Location:** `com.tetris.ui/EventType.java`
-
-**Changes:**
-
-- **Added `SPACE` enum value:**
-
-**Why Modified:**
-
-- Support hard drop feature (instant drop to bottom)
-- Distinguishes soft drop (DOWN) from hard drop (SPACE)
-
----
-
-#### 14. **`EventSource.java`**
-
-**Original Location:** `Tetris/EventSource.java`  
-**New Location:** `com.tetris.ui/EventSource.java`
-
-**Changes:**
-
-- **Package change only:** `Tetris` → `com.tetris.ui`
-- **No structural changes:** Still `USER` vs. `THREAD`
-
-**Why Modified:**
-
-- Package reorganization
-- Moved to `ui` package (input-related enum)
-
----
-
-#### 15. **`BrickRotator.java`**
-
-**Original Location:** `Tetris/BrickRotator.java`  
-**New Location:** `com.tetris.gameLogic/BrickRotator.java`
-
-**Changes:**
-
-- **Added comprehensive JavaDoc comments**
-- **Package change:** `Tetris` → `com.tetris.gameLogic`
-- **Updated import:** `Tetris.logic.bricks.Brick` → `com.tetris.bricks.Brick`
-- **No logic changes:** Rotation algorithm unchanged
-
-**Why Modified:**
-
-- Package reorganization
-- Documentation improvements for maintainability
-- Import path updates to match new structure
 
 ---
 
@@ -1658,7 +1361,7 @@ The following classes from the original codebase were modified to support new fe
 
 ---
 
-## 🎨 Modified Resources (FXML & CSS)
+## Modified Resources (FXML & CSS)
 
 ### 1. **`gameLayout.fxml`** - Complete UI Redesign
 
@@ -1755,7 +1458,7 @@ The following classes from the original codebase were modified to support new fe
 
 ## Unexpected Problems and Solutions
 
-### 1. **High Score Persistence Timing Issue** 💾
+### 1. **High Score Persistence Timing Issue**
 
 #### **Problem:**
 
@@ -1780,7 +1483,7 @@ High scores were only saved to disk when the `GameOverPanel` was displayed. This
 
 ---
 
-### 2. **Ghost Piece Position Calculation Complexity** 👻
+### 2. **Ghost Piece Position Calculation Complexity**
 
 **Challenge:** Visual synchronization
 
@@ -1815,7 +1518,7 @@ ViewData viewData = board.getViewData(); // Includes cached ghost position
 
 ---
 
-### 3. **Freeze Power-Up ArrayIndexOutOfBoundsException** ❄️
+### 3. **Freeze Power-Up ArrayIndexOutOfBoundsException**
 
 #### **Problem:**
 
@@ -1835,14 +1538,14 @@ java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 20
 currentOffset = new Point(4, 2); // Lower spawn point
 ```
 
-- **Result:** ❌ Visible "pop-in" effect, looked unprofessional
+- **Result:** Visible "pop-in" effect, looked unprofessional
 - **Issue:** Bricks appeared suddenly in middle of screen instead of sliding from top
 
-**Final Solution:** ✅ **Modified collision detection to handle spawn zone**
+**Solution:** **Modified collision detection to handle spawn zone**
 
 Updated `MatrixOperations.intersect()` to allow operations in the hidden spawn area while still preventing invalid moves:
 
-### 4. **Score and High Score Desynchronization** 🏆
+### 4. **Score and High Score Desynchronization**
 
 #### **Problem:**
 
@@ -1860,7 +1563,7 @@ Scenario:
 1. `scoreLabel.setText()` - Updated every frame
 2. `highScoreLabel.setText()` - Updated only on file load or game over
 
-**Solution:** ✅ **JavaFX Property Binding**
+**Solution:** **JavaFX Property Binding**
 
 ```java
 // In Score.java
@@ -1895,7 +1598,7 @@ public void initialize() {
 
 ---
 
-### 5. **Next Shape Preview: Single vs. Queue** 🔮
+### 5. **Next Shape Preview: Single vs. Queue**
 
 #### **Problem:**
 
@@ -1918,7 +1621,7 @@ GridPane nextBrickPane; // Single preview grid
 3. **Generator:** `getNextBrick()` → `getNextBricks(int count)`
 4. **Rendering:** Single update loop → Iterate over preview array
 
-**_Solution:_** ✅ **List-based preview system**
+**_Solution:_** **List-based preview system**
 
 ```java
 // BoardVisuals.java
@@ -1947,7 +1650,7 @@ public void updateNextPreviews(int[][][] bricksData) {
 
 ---
 
-### 6. **Brick Generation: Random vs. Fair Distribution** 🎲
+### 6. **Brick Generation: Random vs. Fair Distribution**
 
 #### **Problem:**
 
@@ -1977,7 +1680,7 @@ public Brick getNextBrick() {
 }
 ```
 
-**Final Solution:** ✅ **7-Bag Randomizer (Tetris Standard)**
+**Solution:** **7-Bag Randomizer (Tetris Standard)**
 
 ```java
 // RandomBrickGenerator.java (new)

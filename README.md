@@ -670,7 +670,182 @@ CW2025/
 
 ---
 
-## implemented-but-not-working-properly
+## Implemented but Not Working Properly
+
+While the core game is fully functional, several features were implemented but have limitations or could be significantly improved with more development time.
+
+---
+
+### 1. **Sound System - Limited Audio Controls**
+
+**What's Working:**
+
+- ✅ Background music playback (looping)
+- ✅ Sound effects (move, rotate, drop, clear, freeze)
+- ✅ Basic mute toggle (M key)
+
+**Limitations:**
+
+#### **A. No Volume Control Slider**
+
+- Mute is binary: 100% or 0% (no granular control)
+
+**What Should Be Added:**
+
+- **Master volume slider** (0-100%)
+- **Separate sliders** for music and sound effects
+- **Volume persistence** (save to config file)
+- **Real-time preview** (play sound when adjusting slider)
+
+**Workaround:**
+
+- Users must adjust system volume instead of in-game volume
+
+---
+
+#### **B. No Individual Sound Toggle**
+
+**Current Implementation:**
+
+- Mute affects ALL sounds (music + effects together)
+
+**What Should Be Added:**
+
+- Separate toggles:
+  - ☐ Mute Music
+  - ☐ Mute Sound Effects
+  - ☐ Mute UI Sounds (clicks, notifications)
+
+---
+
+### 2. **Notification System - Incomplete Visual Feedback**
+
+**What's Working:**
+
+- Basic notifications (score, game over)
+- Fade in/out animations
+- Auto-dismiss after duration
+
+**Limitations:**
+
+#### **A. Missing Gameplay Event Notifications**
+
+**Currently NOT Displayed:**
+
+| Event                    | Current Behavior         | Should Display                                 |
+| ------------------------ | ------------------------ | ---------------------------------------------- |
+| **Combo x2, x3, x4...**  | Score increases silently | "COMBO x3! +450 pts" with multiplier animation |
+| **Tetris (4 lines)**     | None                     | "TETRIS! +2400 pts" with celebratory effect    |
+| **Double/Triple Clear**  | No special feedback      | "DOUBLE! +900 pts" or "TRIPLE! +1500 pts"      |
+| **Power-Up Used**        | None                     | Also show remaining duration countdown         |
+| **Level Speed Increase** | None                     | "LEVEL 5! Speed: 810ms → 729ms"                |
+
+---
+
+### 3. **Scoring System - No T-Spin Detection**
+
+**What's Working:**
+
+- Basic line clear scoring (100/300/500/800 × level)
+- Combo bonuses (+50 per combo × level)
+- Soft/hard drop bonuses (+1/+2 per row)
+
+**Major Missing Feature: T-Spin Recognition**
+
+**Standard Scoring:**
+| Move Type | Points (Level 1) | Current Implementation |
+|-----------|-----------------|----------------------|
+| T-Spin (0 lines) | 400 | ❌ Not detected (scores 0) |
+| T-Spin Single | 800 | ❌ Scores as regular Single (100) |
+| T-Spin Double | 1200 | ❌ Scores as regular Double (300) |
+| T-Spin Triple | 1600 | ❌ Scores as regular Triple (500) |
+
+**Why Not Implemented:**
+
+**Technical Complexity:**
+
+**Hard to Showcase in demo**
+
+2. **Must Track Rotation State:**
+
+   - Need to know if last move was rotation vs movement
+   - Must differentiate rotation from wall kick vs normal rotation
+   - Wall kick data stored in `BrickRotator` but not exposed
+
+3. **Mini T-Spin vs Full T-Spin:**
+   - "Mini" T-Spin = only 2 corners blocked (50% points)
+   - "Full" T-Spin = 3+ corners blocked (full points)
+   - Adds another layer of detection complexity
+
+---
+
+#### **Related Issue: No Visual Indicator for Special Moves**
+
+**Current Behavior:**
+
+- All line clears look identical
+- No indication that Tetris (4 lines) is special
+- No "perfect clear" detection (clearing entire board)
+
+**What Should Happen:**
+
+```
+Regular Clear:  "1 LINE CLEAR"         (white text)
+Double:         "DOUBLE CLEAR!"        (yellow text)
+Triple:         "TRIPLE CLEAR!"        (orange text)
+Tetris:         "TETRIS!!!"            (gold text + particles)
+T-Spin Single:  "T-SPIN SINGLE!"       (purple text + special sound)
+T-Spin Double:  "T-SPIN DOUBLE!!!"     (bright purple + screen flash)
+Perfect Clear:  "PERFECT CLEAR!!!!"    (rainbow text + fireworks)
+```
+
+---
+
+#### **Score Comparison Bar**
+
+```
+Current Score:  12,500  ████████░░░░░░░░░░  (25% to high score)
+High Score:     50,000  ████████████████████
+```
+
+---
+
+### 4. **Window Resizing - Non-Responsive Layout**
+
+**What's Working:**
+
+- Game runs at fixed 800×700 window size
+- All UI elements positioned correctly at default size
+- Layout looks polished on standard displays
+
+**Limitations:**
+
+#### **A. Fixed Dimensions - No Dynamic Scaling**
+
+**Current Implementation:**
+
+```java
+// Main.java
+primaryStage.setWidth(GameConfig.WINDOW_WIDTH);  // 800px fixed
+primaryStage.setHeight(GameConfig.WINDOW_HEIGHT); // 700px fixed
+primaryStage.setResizable(false); // ← Window locked to fixed size
+```
+
+**Issues:**
+
+1. **Small Screens (Laptops, 1366×768 displays):**
+
+2. **Large Screens (4K, Ultrawide monitors):**
+
+3. **Accessibility:**
+
+**What Should Happen:**
+
+**Responsive Layout Options:**
+
+**Option 1: Proportional Scaling**
+
+**Option 2: Breakpoint-Based Layouts**
 
 ## Features Not Implemented
 

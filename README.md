@@ -344,27 +344,6 @@ CW2025/
 └── README.md                                # Documentation
 ```
 
-## Controls
-
-### Gameplay Controls
-
-| Key                   | Action                                                      |
-| --------------------- | ----------------------------------------------------------- |
-| `A / ←` (Left Arrow)  | Move brick left                                             |
-| `D / →` (Right Arrow) | Move brick right                                            |
-| `S / ↓` (Down Arrow)  | Soft drop (move brick down faster)                          |
-| `W / ↑` (Up Arrow)    | Rotate brick clockwise                                      |
-| `SPACE`               | Hard drop (instantly drop brick to bottom)                  |
-| `F`                   | Activate **Time Freeze** (pauses falling brick temporarily) |
-
-### Menu & System Controls
-
-| Key | Action                                       |
-| --- | -------------------------------------------- |
-| `N` | Start **New Game** / Restart after game over |
-| `P` | **Pause** / Resume game                      |
-| `M` | **Mute** / Mute and Unmute Background Music  |
-
 ## Implemented and Working Properly
 
 ### Features Added
@@ -585,25 +564,25 @@ CW2025/
 
 #### **`SimpleBoardTest.java`**`
 
-**Core Board Logic:**
+**Core Board Logic**
 
-**Rotation System:**
+**Rotation System**
 
-**Advanced Features:**
+**Advanced Features**
 
-**Edge Cases:**
+**Edge Cases**
 
 ---
 
 #### **`BrickGeneratorTest.java`**
 
-**7-Bag Randomization System:**
+**7-Bag Randomization System**
 
-**Drought Prevention:**
+**Drought Prevention**
 
-**Preview System:**'
+**Preview System**'
 
-**Integration:**
+**Integration**
 
 ---
 
@@ -640,33 +619,33 @@ CW2025/
 
 #### **`MatrixOperationsTest.java`**
 
-**Collision Detection (`intersect`):**
+**Collision Detection (`intersect`)**
 
-**Matrix Manipulation:**
+**Matrix Manipulation**
 
-**Row Clearing Logic:**
+**Row Clearing Logic**
 
 ---
 
 #### **`LevelManagerTest.java`**
 
-**Level Progression:**
+**Level Progression**
 
-**Speed Calculation:**
+**Speed Calculation**
 
-**Edge Cases:**
+**Edge Cases**
 
 ---
 
 #### **`FreezeManagerTest.java`**
 
-**Activation:**
+**Activation**
 
-**One-Time Use:**
+**One-Time Use**
 
-**Duration:**
+**Duration**
 
-**Reset:**
+**Reset**
 
 ---
 
@@ -752,17 +731,9 @@ While the core game is fully functional, several features were implemented but h
 
 **Major Missing Feature: T-Spin Recognition**
 
-**Standard Scoring:**
-| Move Type | Points (Level 1) | Current Implementation |
-|-----------|-----------------|----------------------|
-| T-Spin (0 lines) | 400 | ❌ Not detected (scores 0) |
-| T-Spin Single | 800 | ❌ Scores as regular Single (100) |
-| T-Spin Double | 1200 | ❌ Scores as regular Double (300) |
-| T-Spin Triple | 1600 | ❌ Scores as regular Triple (500) |
-
 **Why Not Implemented:**
 
-**Technical Complexity:**
+**Technical Complexity**
 
 **Hard to Showcase in demo**
 

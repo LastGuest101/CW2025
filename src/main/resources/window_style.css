@@ -1,13 +1,10 @@
-/* --- SOFT WARM AESTHETIC --- */
-
-/* 1. The Background: Blended Wheat Gradient */
 .root {
     /* Blends from Wheat (Top) to Cornsilk (Bottom) */
     /* This creates a warm, glowing effect instead of a flat wall */
     -fx-background-color: linear-gradient(to bottom, #F5DEB3 0%, #FFF8DC 100%);
 }
 
-/* 2. The Game Jar (Glass Container) */
+/* The Game Jar (Glass Container) */
 .gameBoard {
     /* Softer Golden/Amber Border */
     -fx-border-color: #FFD54F;
@@ -24,7 +21,6 @@
     -fx-effect: dropshadow(gaussian, rgba(160, 82, 45, 0.15), 20, 0, 0, 8);
 }
 
-/* 3. The Grid Lines (Essential for gameplay) */
 .gamePanel {
     -fx-background-size: 21px 21px;
     /* Warm Sienna lines at low opacity */
@@ -33,7 +29,6 @@
         linear-gradient(to bottom, rgba(160, 82, 45, 0.15) 1px, transparent 1px);
 }
 
-/* --- SIDEBAR UI --- */
 
 .sidebar {
     -fx-padding: 24px 10px 0 0;
@@ -81,7 +76,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
 }
 
-/* --- FONTS --- */
+/* FONTS */
 /* Using standard fonts that look clean */
 
 .sidebarLabel {
@@ -104,7 +99,7 @@
     -fx-text-fill: #8B5A2B;
 }
 
-/* --- BUTTONS --- */
+/*BUTTONS */
 
 .gameButton {
     -fx-font-family: "Verdana", sans-serif;
@@ -120,25 +115,22 @@
     -fx-border-width: 2px;
     -fx-padding: 10px 25px;
 
-    /* Shadow for depth */
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 3);
     -fx-cursor: hand;
-
-    /* Smooth transition (simulated via states) */
 }
 
 .gameButton:hover {
     /* Lighter/Brighter on hover */
     -fx-background-color: linear-gradient(to bottom, #FFF8E1, #FFE082);
     -fx-translate-y: -2px; /* Moves up slightly */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 5); /* Bigger shadow */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 5);
 }
 
 .gameButton:pressed {
     /* Darker when clicked */
     -fx-background-color: #FFC107;
     -fx-translate-y: 1px; /* Moves down */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1); /* Smaller shadow */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
 }
 
 /* Game Over Style */
@@ -177,42 +169,24 @@
     -fx-font-weight: 900;
     -fx-text-fill: #FF7043;
 
-    /* Add a double shadow:
-       1. White glow outline
-       2. Soft drop shadow */
     -fx-effect: dropshadow(gaussian, white, 0, 0, 0, 2),
                 dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 2, 2);
 }
-/* FROZEN STATE OVERRIDES */
-
-/* 1. Change the main board container to look like ice */
 .frozen-board {
 
-    /* Glowing Cyan Border */
     -fx-border-color: #00FFFF;
 }
-
-/* --- MENU STYLES --- */
-
-/* Semi-transparent background for menus */
 .menu-overlay {
-    /* Slightly more transparent */
     -fx-background-color: rgba(255, 248, 220, 0.85);
     -fx-background-radius: 30;
-
-    /* White subtle border to mimic glass edge */
     -fx-border-color: rgba(255, 255, 255, 0.6);
     -fx-border-width: 2px;
     -fx-border-radius: 30;
 
     -fx-max-width: 500;
     -fx-max-height: 600;
-
-    /* Deep soft shadow to lift it off the game */
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 30, 0.2, 0, 10);
 }
-
-/* Darker overlay for Pause (dim the game) */
 .menu-overlay-dark {
     -fx-background-color: rgba(0, 0, 0, 0.4);
 }
@@ -274,16 +248,11 @@
     -fx-font-weight: bold;
 }
 .menu-button-primary:hover {
-    /* Brighter gradient to look like it's glowing */
     -fx-background-color: linear-gradient(to right, #FF8A65, #FFAB91);
-
-    /* Slight scale up to feel tactile */
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 
-    /* Larger, softer shadow for depth */
     -fx-effect: dropshadow(gaussian, rgba(255, 112, 67, 0.4), 15, 0.3, 0, 5);
 
-    /* Change cursor */
     -fx-cursor: hand;
 }
